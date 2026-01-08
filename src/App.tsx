@@ -12,7 +12,7 @@ import UserProfile from './pages/UserProfile';
 
 function App() {
   return (
-    <Router>
+    <Router basename={import.meta.env.BASE_URL}>
       <Routes>
         {/* Public / Landing */}
         <Route path="/" element={<LandingPage />} />

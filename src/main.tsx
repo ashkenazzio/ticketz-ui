@@ -5,6 +5,7 @@ import './index.css'
 import { BrowserRouter } from 'react-router-dom'
 import '@fontsource/fraunces';
 import '@fontsource/manrope';
+import '@fontsource/jetbrains-mono';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

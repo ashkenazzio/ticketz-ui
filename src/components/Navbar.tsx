@@ -12,9 +12,9 @@ export default function Navbar() {
                     ticketz<span className="text-lime">.</span>
                 </Link>
                 <div className="hidden lg:flex gap-6 text-sm font-medium text-gray-400">
-                    <a href="#" className="hover:text-white transition-colors">Discovery</a>
-                    <a href="#" className="hover:text-white transition-colors">Communities</a>
-                    <a href="#" className="hover:text-white transition-colors">About</a>
+                    <Link to="/discovery" className="hover:text-white transition-colors">Discovery</Link>
+                    <Link to="/communities" className="hover:text-white transition-colors">Communities</Link>
+                    <Link to="/about" className="hover:text-white transition-colors">About</Link>
                 </div>
             </div>
             <div className="flex items-center gap-6">

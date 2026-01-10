@@ -1,5 +1,8 @@
 import { Routes, Route } from 'react-router-dom';
 import LandingPage from './pages/LandingPage';
+import Discovery from './pages/Discovery';
+import Communities from './pages/Communities';
+import About from './pages/About';
 import Dashboard from './pages/Dashboard';
 import CreateEvent from './pages/organizer/CreateEvent';
 import Scanner from './pages/organizer/Scanner';
@@ -16,6 +19,9 @@ function App() {
       <Routes>
         {/* Public / Landing */}
         <Route path="/" element={<LandingPage />} />
+        <Route path="/discovery" element={<Discovery />} />
+        <Route path="/communities" element={<Communities />} />
+        <Route path="/about" element={<About />} />
         
         {/* Attendee Journey */}
         <Route path="/community/:id" element={<CommunityHub />} />

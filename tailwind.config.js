@@ -15,6 +15,7 @@ export default {
       fontFamily: {
         sans: ['Manrope', 'sans-serif'],
         serif: ['Fraunces', 'serif'],
+        mono: ['JetBrains Mono', 'monospace'],
       }
     },
   },

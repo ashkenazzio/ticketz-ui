@@ -1,89 +1,44 @@
-import { ArrowRight, Bookmark } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-const events = [
-  {
-    id: 1,
-    image: "https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?q=80&w=2070&auto=format&fit=crop",
-    badge: "Selling Fast",
-    date: "Sat, Oct 24 • 06:00 AM",
-    price: "$15",
-    title: "Neon Sunrise 5K",
-    description: "Join the city's largest morning run club. Post-run coffee and networking included.",
-    organizer: "Urban Striders",
-    organizerImg: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80"
-  },
-  {
-    id: 2,
-    image: "https://images.unsplash.com/photo-1555099962-4199c345e5dd?q=80&w=2070&auto=format&fit=crop",
-    badge: null,
-    date: "Wed, Oct 28 • 06:30 PM",
-    price: "Free",
-    title: "React Patterns Workshop",
-    description: "Deep dive into advanced component composition. Pizza provided by Vercel.",
-    organizer: "JS Collective",
-    organizerImg: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80"
-  },
-  {
-    id: 3,
-    image: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=2070&auto=format&fit=crop",
-    badge: "Sold Out",
-    date: "Fri, Oct 30 • 11:00 PM",
-    price: "$35",
-    title: "Warehouse Project: 004",
-    description: "Underground techno in a secret industrial location. Location reveal 2h before.",
-    organizer: "Bass Sector",
-    organizerImg: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=100&q=80"
-  }
-];
+const SARAH_IMG = "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80";
 
 export default function TrendingEvents() {
   return (
-    <section className="py-20 px-4 md:px-6 max-w-7xl mx-auto">
-        <div className="flex items-end justify-between mb-12">
-            <div>
-                <h2 className="font-display text-4xl md:text-5xl font-semibold uppercase tracking-tighter mb-2">Trending Now</h2>
-                <p className="text-gray-400 text-lg">Curated events heating up this week.</p>
+    <section className="py-24 px-4 md:px-6 max-w-7xl mx-auto border-b border-white/5">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center">
+            {/* Image Side */}
+            <div className="relative group order-2 lg:order-1">
+                <div className="absolute -inset-4 bg-lime/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                <div className="relative aspect-[3/4] md:aspect-[4/5] rounded-sm overflow-hidden">
+                    <img 
+                        src={SARAH_IMG} 
+                        alt="Sarah Jenkins" 
+                        className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+                    />
+                    <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-dark via-dark/80 to-transparent">
+                        <div className="text-lime font-mono text-xs uppercase tracking-widest mb-2">Founder, Neon Sunrise</div>
+                        <div className="text-white font-display text-3xl font-semibold uppercase tracking-tight">Sarah Jenkins</div>
+                    </div>
+                </div>
             </div>
-            <a href="#" className="hidden md:flex items-center gap-2 text-lime hover:text-white transition-colors font-medium uppercase text-sm tracking-wide">
-                View All <ArrowRight className="w-4 h-4" />
-            </a>
-        </div>
 
-        {/* Masonry / Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {events.map((event) => (
-                <Link to="/event/1" key={event.id} className="group relative bg-surface border border-white/5 hover:border-lime/50 transition-all duration-300 rounded-sm overflow-hidden flex flex-col h-full">
-                    <div className="relative h-64 overflow-hidden">
-                        <img src={event.image} alt={event.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                        {event.badge && (
-                            <div className={`absolute top-4 right-4 text-xs font-semibold px-2 py-1 uppercase rounded-sm ${event.badge === 'Sold Out' ? 'bg-white text-dark' : 'bg-lime text-dark'}`}>
-                                {event.badge}
-                            </div>
-                        )}
-                    </div>
-                    <div className="p-6 flex flex-col flex-grow">
-                        <div className="flex justify-between items-start mb-4">
-                            <div className="text-lime text-sm font-mono uppercase">{event.date}</div>
-                            <div className="text-white font-semibold">{event.price}</div>
-                        </div>
-                        <h3 className="font-display text-2xl font-semibold uppercase tracking-tight leading-none mb-2 group-hover:text-lime transition-colors">{event.title}</h3>
-                        <p className="text-gray-400 text-sm mb-6 line-clamp-2">{event.description}</p>
-                        
-                        <div className="mt-auto pt-4 border-t border-white/10 flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                                <div className="w-6 h-6 rounded-sm bg-gray-700 overflow-hidden">
-                                    <img src={event.organizerImg} className="w-full h-full object-cover" alt={event.organizer} />
-                                </div>
-                                <span className="text-xs text-gray-300 font-medium">{event.organizer}</span>
-                            </div>
-                            <button className="p-2 hover:bg-white/10 rounded-sm transition-colors">
-                                <Bookmark className="w-4 h-4 text-gray-400" />
-                            </button>
-                        </div>
-                    </div>
-                </Link>
-            ))}
+            {/* Text Side */}
+            <div className="space-y-10 order-1 lg:order-2">
+                <h2 className="font-display text-5xl md:text-7xl font-semibold uppercase tracking-tighter leading-[0.9]">
+                    Meet the <br/><span className="text-lime">Architects.</span>
+                </h2>
+                
+                <blockquote className="text-xl md:text-3xl font-serif italic text-gray-200 leading-relaxed border-l-4 border-lime pl-8 py-2">
+                    "I started the 5K run club because I was tired of networking in stuffy conference rooms. I wanted to meet people while the city was still waking up. Now, 500 of us run every Saturday."
+                </blockquote>
+
+                <div className="pt-4">
+                    <Link to="/event/1" className="inline-flex items-center gap-3 bg-white text-dark font-bold px-8 py-4 rounded-sm hover:bg-lime hover:text-dark transition-all uppercase tracking-wide">
+                        Join Sarah's Next Run <ArrowRight className="w-5 h-5" />
+                    </Link>
+                </div>
+            </div>
         </div>
     </section>
   );

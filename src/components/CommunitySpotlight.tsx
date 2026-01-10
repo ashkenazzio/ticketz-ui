@@ -1,52 +1,71 @@
-import { Sparkles } from 'lucide-react';
+import { ArrowRight, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
+
+const BASE = import.meta.env.BASE_URL;
+
+const VIBES = [
+    {
+        id: 'adrenaline',
+        title: 'Adrenaline',
+        desc: 'Heart rate up, lights down. Underground bass and warehouse raves.',
+        image: `${BASE}event-images/techno-gathering.jpg`
+    },
+    {
+        id: 'clarity',
+        title: 'Clarity',
+        desc: 'Mindfulness, yoga, and matcha mornings.',
+        image: `${BASE}event-images/yoga-event.jpg`
+    },
+    {
+        id: 'craft',
+        title: 'Craft',
+        desc: 'Pottery wheels, coding workshops, and sourdough starters.',
+        image: `${BASE}event-images/painting-class.jpg`
+    }
+];
 
 export default function CommunitySpotlight() {
   return (
     <section className="bg-surface border-y border-white/5 py-24">
         <div className="max-w-7xl mx-auto px-4 md:px-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                
-                {/* Info */}
+            <div className="flex flex-col md:flex-row items-end justify-between mb-16 gap-6">
                 <div>
-                    <div className="inline-flex items-center gap-2 mb-6 text-lime font-mono text-xs uppercase tracking-widest">
-                        <Sparkles className="w-3 h-3" /> Community Spotlight
+                     <div className="inline-flex items-center gap-2 mb-4 text-lime font-mono text-xs uppercase tracking-widest">
+                        <Sparkles className="w-3 h-3" /> Curated Vibes
                     </div>
-                    <h2 className="font-display text-5xl md:text-6xl font-semibold uppercase tracking-tighter leading-none mb-6">
-                        Bass Sector<br/>Collective
+                    <h2 className="font-display text-5xl md:text-6xl font-semibold uppercase tracking-tighter leading-none">
+                        Find Your <br/><span className="text-gray-500">Frequency.</span>
                     </h2>
-                    <p className="text-gray-400 text-lg mb-8 max-w-lg leading-relaxed">
-                        A curation of high-fidelity sound system culture. From dubstep to jungle, we host the most immersive underground events in the city.
-                    </p>
-                    
-                    <div className="flex gap-8 mb-10">
-                        <div>
-                            <div className="text-3xl font-display font-semibold text-white">12.5K</div>
-                            <div className="text-xs text-gray-500 uppercase tracking-wide">Subscribers</div>
-                        </div>
-                        <div>
-                            <div className="text-3xl font-display font-semibold text-white">48</div>
-                            <div className="text-xs text-gray-500 uppercase tracking-wide">Events Hosted</div>
-                        </div>
-                    </div>
-
-                    <div className="flex gap-4">
-                        <button className="bg-lime text-dark font-display font-semibold uppercase tracking-tight px-8 py-3 rounded-sm hover:bg-limehover transition-colors">
-                            Subscribe
-                        </button>
-                        <Link to="/community/1" className="border border-white/20 text-white font-display font-semibold uppercase tracking-tight px-8 py-3 rounded-sm hover:bg-white/10 transition-colors inline-block">
-                            View Profile
-                        </Link>
-                    </div>
                 </div>
+                <p className="text-gray-400 text-lg max-w-md font-sans">
+                    Don't just browse events. Choose your mood.
+                </p>
+            </div>
 
-                {/* Visual grid */}
-                <div className="grid grid-cols-2 gap-4">
-                    <img src="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=1000&auto=format&fit=crop" className="w-full h-64 object-cover rounded-sm opacity-80 hover:opacity-100 transition-opacity" alt="Spotlight 1" />
-                    <img src="https://images.unsplash.com/photo-1493225255756-d9584f8606e9?q=80&w=1000&auto=format&fit=crop" className="w-full h-64 object-cover rounded-sm mt-8 opacity-80 hover:opacity-100 transition-opacity" alt="Spotlight 2" />
-                    <img src="https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?q=80&w=1000&auto=format&fit=crop" className="w-full h-64 object-cover rounded-sm opacity-80 hover:opacity-100 transition-opacity" alt="Spotlight 3" />
-                    <img src="https://images.unsplash.com/photo-1506157786151-b8491531f063?q=80&w=1000&auto=format&fit=crop" className="w-full h-64 object-cover rounded-sm mt-8 opacity-80 hover:opacity-100 transition-opacity" alt="Spotlight 4" />
-                </div>
+            {/* Vibe Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {VIBES.map((vibe) => (
+                    <Link key={vibe.id} to={`/vibe/${vibe.id}`} className="group relative block aspect-[3/4] overflow-hidden rounded-sm">
+                        <img 
+                            src={vibe.image} 
+                            alt={vibe.title} 
+                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-dark/90 via-dark/20 to-transparent transition-opacity duration-300 group-hover:via-dark/40"></div>
+                        
+                        <div className="absolute bottom-0 left-0 right-0 p-8 transform transition-transform duration-500 group-hover:-translate-y-2">
+                            <h3 className="font-display text-3xl font-semibold uppercase tracking-tight mb-2 text-white group-hover:text-lime transition-colors">
+                                {vibe.title}
+                            </h3>
+                            <p className="text-gray-300 text-sm mb-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 transform translate-y-4 group-hover:translate-y-0">
+                                {vibe.desc}
+                            </p>
+                            <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-lime">
+                                Explore The Vibe <ArrowRight className="w-3 h-3" />
+                            </span>
+                        </div>
+                    </Link>
+                ))}
             </div>
         </div>
     </section>

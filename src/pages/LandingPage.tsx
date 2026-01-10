@@ -4,6 +4,7 @@ import TrendingEvents from '../components/TrendingEvents';
 import CommunitySpotlight from '../components/CommunitySpotlight';
 import EventHighlight from '../components/EventHighlight';
 import WalletPreview from '../components/WalletPreview';
+import SocialProof from '../components/SocialProof';
 import Footer from '../components/Footer';
 import MobileBottomNav from '../components/MobileBottomNav';
 
@@ -16,6 +17,7 @@ export default function LandingPage() {
       <CommunitySpotlight />
       <EventHighlight />
       <WalletPreview />
+      <SocialProof />
       <Footer />
       <MobileBottomNav />
     </>

@@ -105,7 +105,7 @@ export default function EventDetails() {
                     <div className="text-xs text-gray-500 uppercase tracking-widest mb-1">Total Price</div>
                     <div className="text-3xl font-display font-semibold text-white">$89.00</div>
                 </div>
-                <Link to="/checkout" className="bg-lime text-dark font-display font-semibold uppercase tracking-tight px-10 py-4 rounded-sm hover:bg-limehover transition-colors shadow-[0_0_20px_rgba(187,223,50,0.3)]">
+                <Link to="/checkout" className="bg-lime text-dark font-display font-semibold uppercase tracking-tight px-10 py-4 rounded-sm hover:bg-limehover transition-colors">
                     Buy Tickets
                 </Link>
             </div>

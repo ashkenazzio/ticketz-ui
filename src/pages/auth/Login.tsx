@@ -13,11 +13,11 @@ export default function Login() {
             />
             <div className="absolute inset-0 bg-gradient-to-tr from-lime/20 to-transparent mix-blend-soft-light"></div>
             <div className="relative z-10 p-12 flex flex-col justify-between h-full">
-                <Link to="/" className="font-display text-3xl font-semibold tracking-tighter uppercase text-white">
-                    Ticketz<span className="text-lime">.</span>
+                <Link to="/" className="font-sans text-3xl font-bold tracking-tight text-white inline-block mb-2">
+                    ticketz<span className="text-lime">.</span>
                 </Link>
                 <div>
-                    <h1 className="font-display text-6xl font-semibold uppercase tracking-tighter leading-none mb-4">
+                    <h1 className="font-serif text-6xl font-bold uppercase tracking-tighter leading-none mb-4">
                         Curate the<br/>Underground
                     </h1>
                     <p className="text-gray-400 max-w-md text-lg">
@@ -31,24 +31,24 @@ export default function Login() {
         <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-surface">
             <div className="w-full max-w-md space-y-8">
                 <div className="text-center lg:text-left">
-                    <h2 className="font-display text-4xl font-semibold uppercase tracking-tighter text-white">Sign In</h2>
+                    <h2 className="font-serif text-4xl font-bold uppercase tracking-tighter text-white">Sign In</h2>
                     <p className="text-gray-400 mt-2">Enter your details to access your dashboard.</p>
                 </div>
 
                 <div className="space-y-6">
                     <div>
-                        <label className="block text-xs uppercase text-gray-500 mb-2 font-medium tracking-wide">Email Address</label>
+                        <label className="block text-xs uppercase text-gray-500 mb-2 font-bold tracking-wide">Email Address</label>
                         <input type="email" className="w-full bg-dark border border-white/10 rounded-sm p-4 text-white placeholder-gray-600 focus:outline-none focus:border-lime transition-colors" placeholder="alex@example.com" />
                     </div>
                     <div>
                         <div className="flex justify-between items-center mb-2">
-                             <label className="block text-xs uppercase text-gray-500 font-medium tracking-wide">Password</label>
+                             <label className="block text-xs uppercase text-gray-500 font-bold tracking-wide">Password</label>
                              <a href="#" className="text-xs text-lime hover:underline">Forgot?</a>
                         </div>
                         <input type="password" className="w-full bg-dark border border-white/10 rounded-sm p-4 text-white placeholder-gray-600 focus:outline-none focus:border-lime transition-colors" placeholder="••••••••" />
                     </div>
 
-                    <Link to="/dashboard" className="block w-full bg-lime text-dark font-display font-semibold uppercase tracking-tight py-4 rounded-sm hover:bg-limehover transition-colors text-center">
+                    <Link to="/dashboard" className="block w-full bg-lime text-dark font-sans font-bold uppercase tracking-tight py-4 rounded-sm hover:bg-limehover transition-colors text-center">
                         Sign In
                     </Link>
                 </div>

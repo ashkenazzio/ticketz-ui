@@ -2,7 +2,7 @@ import DashboardLayout from '../layouts/DashboardLayout';
 import StatCard from '../components/dashboard/StatCard';
 import SalesChart from '../components/dashboard/SalesChart';
 import RecentActivityTable from '../components/dashboard/RecentActivityTable';
-import { DollarSign, Users, Ticket, Plus } from 'lucide-react';
+import { DollarSign, Users, Ticket, Plus, PlusCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function Dashboard() {
@@ -14,9 +14,10 @@ export default function Dashboard() {
                 <h1 className="font-display text-4xl font-semibold uppercase tracking-tighter text-white leading-none">Dashboard</h1>
                 <p className="text-gray-400 mt-2">Welcome back, Alex. Here's what's happening today.</p>
             </div>
-            <Link to="/dashboard/events/create" className="bg-lime text-dark font-display font-semibold uppercase tracking-tight px-6 py-3 rounded-sm hover:bg-limehover transition-colors flex items-center gap-2 shadow-[0_0_15px_rgba(187,223,50,0.2)]">
-                <Plus className="w-5 h-5" /> Create Event
-            </Link>
+                <Link to="/dashboard/events/create" className="bg-lime text-dark font-display font-semibold uppercase tracking-tight px-6 py-3 rounded-sm hover:bg-limehover transition-colors flex items-center gap-2">
+                    <PlusCircle className="w-5 h-5" />
+                    Create New Event
+                </Link>
         </div>
 
         {/* KPI Section */}

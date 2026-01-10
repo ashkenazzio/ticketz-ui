@@ -105,7 +105,7 @@ export default function Checkout() {
                     </div>
                     <button 
                         onClick={handleNext}
-                        className="w-full bg-lime text-dark font-display font-semibold uppercase tracking-tight py-4 rounded-sm hover:bg-limehover transition-colors shadow-[0_0_15px_rgba(187,223,50,0.2)]"
+                        className="w-full bg-lime text-dark font-display font-semibold uppercase tracking-tight py-4 rounded-sm hover:bg-limehover transition-colors"
                     >
                         {step === 1 ? 'Continue to Payment' : `Pay $${price * quantity}.00`}
                     </button>

@@ -12,12 +12,15 @@
     "deploy": "npm run build && gh-pages -d dist"
   },
   "dependencies": {
+    "@fontsource/fraunces": "^5.2.9",
+    "@fontsource/manrope": "^5.2.8",
     "lucide-react": "^0.562.0",
     "react": "^19.2.0",
     "react-confetti": "^6.4.0",
     "react-dom": "^19.2.0",
     "react-router-dom": "^7.12.0",
-    "recharts": "^3.6.0"
+    "recharts": "^3.6.0",
+    "unsplash-js": "^7.0.20"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",

@@ -13,16 +13,14 @@ export default function Sidebar() {
     const location = useLocation();
 
     return (
-        <aside className="fixed left-0 top-0 h-screen w-64 bg-dark border-r border-white/5 flex flex-col z-40">
-            {/* Logo Area */}
-            <div className="h-20 flex items-center px-8 border-b border-white/5">
-                <Link to="/" className="font-display text-2xl font-semibold tracking-tighter uppercase text-white">
-                    Ticketz<span className="text-lime">.</span>
-                </Link>
-            </div>
+    <aside className="w-64 bg-surface border-r border-white/5 h-screen sticky top-0 flex flex-col">
+        <div className="p-6">
+            <Link to="/" className="font-sans text-2xl font-bold tracking-tight text-white block mb-8">
+                ticketz<span className="text-lime">.</span>
+            </Link>
+            
+            <nav className="space-y-1">
 
-            {/* Navigation */}
-            <nav className="flex-1 py-8 px-4 space-y-2">
                 {navItems.map((item) => {
                     const isActive = location.pathname === item.path;
                     return (
@@ -41,6 +39,7 @@ export default function Sidebar() {
                     )
                 })}
             </nav>
+        </div>
 
             {/* User Profile Snippet / Logout */}
             <div className="p-4 border-t border-white/5">

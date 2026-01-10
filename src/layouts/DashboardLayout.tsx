@@ -8,11 +8,11 @@ interface DashboardLayoutProps {
 
 export default function DashboardLayout({ children, title = "Overview" }: DashboardLayoutProps) {
   return (
-    <div className="min-h-screen bg-dark text-white font-sans selection:bg-lime selection:text-black">
+    <div className="min-h-screen bg-dark text-white font-sans selection:bg-lime selection:text-black flex">
         <Sidebar />
         
         {/* Main Content Area */}
-        <div className="ml-64 min-h-screen flex flex-col">
+        <div className="flex-1 min-h-screen flex flex-col">
             
             {/* Top Bar */}
             <header className="h-20 border-b border-white/5 bg-dark/80 backdrop-blur-md sticky top-0 z-30 px-8 flex items-center justify-between">

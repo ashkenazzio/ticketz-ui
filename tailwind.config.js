@@ -7,14 +7,14 @@ export default {
   theme: {
     extend: {
       colors: {
-        dark: '#0A0A12',
-        lime: '#BBDF32',
-        limehover: '#aacc20',
-        surface: '#16161F'
+        dark: '#0d1216',
+        surface: '#18191b',
+        lime: '#a7f175',
+        limehover: '#96d969',
       },
       fontFamily: {
-        sans: ['Inter', 'sans-serif'],
-        display: ['Oswald', 'sans-serif'],
+        sans: ['Manrope', 'sans-serif'],
+        serif: ['Fraunces', 'serif'],
       }
     },
   },

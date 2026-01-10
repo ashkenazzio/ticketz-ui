@@ -31,7 +31,7 @@ export default function CommunitySpotlight() {
                     </div>
 
                     <div className="flex gap-4">
-                        <button className="bg-lime text-dark font-display font-semibold uppercase tracking-tight px-8 py-3 rounded-sm hover:bg-limehover transition-colors shadow-[0_0_20px_rgba(187,223,50,0.3)]">
+                        <button className="bg-lime text-dark font-display font-semibold uppercase tracking-tight px-8 py-3 rounded-sm hover:bg-limehover transition-colors">
                             Subscribe
                         </button>
                         <Link to="/community/1" className="border border-white/20 text-white font-display font-semibold uppercase tracking-tight px-8 py-3 rounded-sm hover:bg-white/10 transition-colors inline-block">

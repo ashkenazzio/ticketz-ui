@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import LandingPage from './pages/LandingPage';
 import Dashboard from './pages/Dashboard';
 import CreateEvent from './pages/organizer/CreateEvent';
@@ -12,11 +12,10 @@ import UserProfile from './pages/UserProfile';
 
 function App() {
   return (
-    <Router basename={import.meta.env.BASE_URL}>
-      <div className="bg-dark text-white min-h-screen">
-        <Routes>
-          {/* Public / Landing */}
-          <Route path="/" element={<LandingPage />} />
+    <div className="bg-dark text-white min-h-screen">
+      <Routes>
+        {/* Public / Landing */}
+        <Route path="/" element={<LandingPage />} />
         
         {/* Attendee Journey */}
         <Route path="/community/:id" element={<CommunityHub />} />
@@ -34,8 +33,7 @@ function App() {
         <Route path="/profile" element={<UserProfile />} />
       </Routes>
     </div>
-  </Router>
-);
+  );
 }
 
 export default App;

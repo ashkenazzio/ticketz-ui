@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Receipt, ArrowLeft, Filter } from 'lucide-react';
-import Navbar from '../../components/Navbar';
-import Footer from '../../components/Footer';
+import { Receipt, Filter } from 'lucide-react';
+import AppLayout from '../../layouts/AppLayout';
 import OrderCard from '../../components/OrderCard';
 import type { BadgeStatus } from '../../components/StatusBadge';
 
@@ -95,34 +94,12 @@ export default function Orders() {
     .toFixed(2);
 
   return (
-    <div className="bg-dark min-h-screen text-white font-sans selection:bg-lime selection:text-black">
-      <Navbar />
-
-      <main className="pt-24 pb-20">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6">
-          {/* Header */}
-          <div className="mb-8">
-            <Link
-              to="/app"
-              className="inline-flex items-center gap-2 text-gray-400 hover:text-white text-sm mb-4 transition-colors"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Back to App
-            </Link>
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-lime/10 flex items-center justify-center">
-                <Receipt className="w-6 h-6 text-lime" />
-              </div>
-              <div>
-                <h1 className="font-display text-3xl sm:text-4xl font-semibold uppercase tracking-tight">
-                  Order History
-                </h1>
-                <p className="text-gray-400 text-sm mt-1">
-                  {orderCounts.all} orders • ${totalSpent} total spent
-                </p>
-              </div>
-            </div>
-          </div>
+    <AppLayout title="Order History">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6">
+        {/* Stats Subtitle */}
+        <p className="text-gray-400 text-sm mb-6">
+          {orderCounts.all} orders • ${totalSpent} total spent
+        </p>
 
           {/* Filter Tabs */}
           <div className="flex items-center gap-2 mb-6 overflow-x-auto pb-2">
@@ -214,10 +191,7 @@ export default function Orders() {
               </div>
             </div>
           )}
-        </div>
-      </main>
-
-      <Footer />
-    </div>
+      </div>
+    </AppLayout>
   );
 }

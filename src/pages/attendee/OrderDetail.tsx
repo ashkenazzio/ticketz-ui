@@ -1,7 +1,6 @@
 import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, Download, Calendar, MapPin, Ticket, CreditCard, Check, Clock } from 'lucide-react';
-import Navbar from '../../components/Navbar';
-import Footer from '../../components/Footer';
+import { Download, Calendar, MapPin, Ticket, CreditCard, Check, Clock } from 'lucide-react';
+import AppLayout from '../../layouts/AppLayout';
 import StatusBadge from '../../components/StatusBadge';
 
 // Mock order data - in real app, would fetch based on params.id
@@ -39,32 +38,15 @@ export default function OrderDetail() {
   const { id } = useParams();
 
   return (
-    <div className="bg-dark min-h-screen text-white font-sans selection:bg-lime selection:text-black">
-      <Navbar />
-
-      <main className="pt-24 pb-20">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6">
-          {/* Header */}
-          <div className="mb-8">
-            <Link
-              to="/orders"
-              className="inline-flex items-center gap-2 text-gray-400 hover:text-white text-sm mb-4 transition-colors"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Back to Orders
-            </Link>
-            <div className="flex items-start justify-between">
-              <div>
-                <h1 className="font-display text-2xl sm:text-3xl font-semibold uppercase tracking-tight">
-                  Order {orderData.id}
-                </h1>
-                <p className="text-gray-400 text-sm mt-1">
-                  Placed on {orderData.createdAt}
-                </p>
-              </div>
-              <StatusBadge status={orderData.status} size="md" />
-            </div>
-          </div>
+    <AppLayout title={`Order ${orderData.id}`}>
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6">
+        {/* Order Meta */}
+        <div className="flex items-center justify-between mb-6">
+          <p className="text-gray-400 text-sm">
+            Placed on {orderData.createdAt}
+          </p>
+          <StatusBadge status={orderData.status} size="md" />
+        </div>
 
           {/* Event Card */}
           <div className="bg-surface border border-white/5 mb-6 overflow-hidden">
@@ -191,10 +173,7 @@ export default function OrderDetail() {
               Download Receipt
             </button>
           </div>
-        </div>
-      </main>
-
-      <Footer />
-    </div>
+      </div>
+    </AppLayout>
   );
 }

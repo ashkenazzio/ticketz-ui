@@ -2,7 +2,7 @@ import { Database, ShieldCheck, Server, ArrowRight } from 'lucide-react';
 
 export default function ArchitectureDiagram() {
   return (
-    <section className="py-24 px-4 bg-[#0d1216] border-b border-white/5">
+    <section className="py-24 px-4 bg-dark border-b border-white/5">
         <div className="max-w-7xl mx-auto">
             <h2 className="font-mono text-3xl text-white mb-8 text-center">
                 <span className="text-gray-600">//</span> Core Architecture

@@ -11,7 +11,7 @@ export default function DataModel() {
   ];
 
   return (
-    <section className="py-24 px-6 bg-[#0a0a0c] border-b border-white/5">
+    <section className="py-24 px-6 bg-darker border-b border-white/5">
         <div className="max-w-7xl mx-auto">
              <h2 className="font-mono text-3xl text-white mb-16 text-center">
                 <span className="text-gray-600">//</span> Data Model & Schema
@@ -29,7 +29,7 @@ export default function DataModel() {
                 ))}
             </div>
 
-            <div className="max-w-4xl mx-auto bg-black border border-white/10 p-8 rounded-sm">
+            <div className="max-w-4xl mx-auto bg-dark border border-white/10 p-8 rounded-sm">
                  <h3 className="font-mono text-lime text-sm mb-6 uppercase tracking-widest flex items-center gap-2">
                     <Share2 className="w-4 h-4" /> Key GraphQL Operations
                 </h3>

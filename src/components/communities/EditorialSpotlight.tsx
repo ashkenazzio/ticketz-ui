@@ -10,7 +10,7 @@ export default function EditorialSpotlight() {
             {/* Visual Side (Left) */}
             <div className="relative group">
                 <div className="absolute top-4 -left-4 w-full h-full border border-lime/30 z-0 hidden md:block"></div>
-                <div className="relative z-10 aspect-[3/4] overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-700">
+                <div className="relative z-10 aspect-[3/4] overflow-hidden transition-all duration-700">
                     <img 
                         src={`${BASE}event-images/music-records.jpg`} 
                         alt="The Analog Club" 
@@ -20,7 +20,7 @@ export default function EditorialSpotlight() {
             </div>
 
             {/* Content Side (Right) - Overlapping Aesthetic */}
-            <div className="lg:-ml-12 z-20 bg-dark/90 p-8 md:p-12 backdrop-blur-md border border-white/5 shadow-2xl">
+            <div className="z-20 bg-dark/90 p-8 md:p-12 backdrop-blur-md border border-white/5 shadow-float lg:-ml-12">
                 <div className="text-lime font-mono text-xs uppercase tracking-widest mb-4 flex items-center gap-2">
                     <Disc className="w-4 h-4" /> Community Spotlight
                 </div>
@@ -48,7 +48,7 @@ export default function EditorialSpotlight() {
                     </div>
                 </div>
 
-                <button className="w-full md:w-auto bg-white text-dark font-bold px-8 py-4 uppercase tracking-wide hover:bg-lime transition-colors">
+                <button className="w-full md:w-auto bg-white text-dark font-bold px-8 py-4 rounded-lg uppercase tracking-wide hover:bg-lime transition-colors">
                     Join the Listening Session
                 </button>
             </div>

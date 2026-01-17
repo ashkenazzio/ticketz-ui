@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom';
 import {
     Ticket, Users, Calendar, Search, ArrowRight, Sparkles,
-    ShoppingBag, Heart, Settings, LayoutDashboard, ChevronRight
+    ShoppingBag, Heart, ChevronRight
 } from 'lucide-react';
+import AppLayout from '../layouts/AppLayout';
 
 const quickActions = [
     {
@@ -97,63 +98,30 @@ const upcomingTickets = [
 
 export default function AppHub() {
     return (
-        <div className="bg-dark min-h-screen text-white font-sans">
-            {/* Top Bar */}
-            <header className="sticky top-0 z-50 bg-dark/95 backdrop-blur-sm border-b border-white/5">
-                <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
-                    <Link to="/" className="font-sans text-xl font-bold tracking-tight">
-                        ticketz<span className="text-lime">.</span>
-                    </Link>
-                    <div className="flex items-center gap-4">
-                        <Link
-                            to="/dashboard"
-                            className="hidden sm:flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors"
-                        >
-                            <LayoutDashboard className="w-4 h-4" />
-                            Organizer Dashboard
-                        </Link>
-                        <Link
-                            to="/settings"
-                            className="w-9 h-9 bg-surface rounded-full flex items-center justify-center hover:bg-white/10 transition-colors"
-                        >
-                            <Settings className="w-4 h-4 text-gray-400" />
-                        </Link>
-                        <Link to="/profile" className="w-9 h-9 rounded-full overflow-hidden border-2 border-lime">
-                            <img
-                                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&q=80"
-                                alt="Profile"
-                                className="w-full h-full object-cover"
-                            />
-                        </Link>
+        <AppLayout>
+            <div className="px-4 py-6">
+                <div className="max-w-5xl mx-auto">
+                    {/* Welcome */}
+                    <div className="mb-6">
+                        <h1 className="font-display text-2xl sm:text-3xl font-semibold uppercase tracking-tight">
+                            Welcome back, Alex
+                        </h1>
+                        <p className="text-gray-400 text-sm mt-1">
+                            You have 2 upcoming events
+                        </p>
+                    </div>
+
+                    {/* Search Bar */}
+                    <div className="relative mb-8">
+                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                        <input
+                            type="text"
+                            placeholder="Search events, communities, or tickets..."
+                            className="w-full bg-surface border border-white/10 py-4 pl-12 pr-4 text-white placeholder-gray-500 focus:outline-none focus:border-lime/50 transition-colors"
+                        />
                     </div>
                 </div>
-            </header>
-
-            <main className="pb-12">
-                {/* Hero Section */}
-                <div className="pt-8 pb-6 px-4">
-                    <div className="max-w-5xl mx-auto">
-                        {/* Welcome */}
-                        <div className="mb-6">
-                            <h1 className="font-display text-2xl sm:text-3xl font-semibold uppercase tracking-tight">
-                                Welcome back, Alex
-                            </h1>
-                            <p className="text-gray-400 text-sm mt-1">
-                                You have 2 upcoming events
-                            </p>
-                        </div>
-
-                        {/* Search Bar */}
-                        <div className="relative mb-8">
-                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
-                            <input
-                                type="text"
-                                placeholder="Search events, communities, or tickets..."
-                                className="w-full bg-surface border border-white/10 py-4 pl-12 pr-4 text-white placeholder-gray-500 focus:outline-none focus:border-lime/50 transition-colors"
-                            />
-                        </div>
-                    </div>
-                </div>
+            </div>
 
                 {/* Quick Actions - Your Stuff */}
                 <section className="px-4 mb-10">
@@ -318,33 +286,6 @@ export default function AppHub() {
                         </div>
                     </div>
                 </section>
-
-                {/* Bottom Nav - Mobile */}
-                <div className="sm:hidden fixed bottom-0 left-0 right-0 bg-surface border-t border-white/5 px-4 py-2 z-50">
-                    <div className="flex items-center justify-around">
-                        <Link to="/app" className="flex flex-col items-center gap-1 text-lime">
-                            <LayoutDashboard className="w-5 h-5" />
-                            <span className="text-[10px] uppercase">Home</span>
-                        </Link>
-                        <Link to="/wallet" className="flex flex-col items-center gap-1 text-gray-400 hover:text-white">
-                            <Ticket className="w-5 h-5" />
-                            <span className="text-[10px] uppercase">Tickets</span>
-                        </Link>
-                        <Link to="/discovery" className="flex flex-col items-center gap-1 text-gray-400 hover:text-white">
-                            <Search className="w-5 h-5" />
-                            <span className="text-[10px] uppercase">Explore</span>
-                        </Link>
-                        <Link to="/my-communities" className="flex flex-col items-center gap-1 text-gray-400 hover:text-white">
-                            <Users className="w-5 h-5" />
-                            <span className="text-[10px] uppercase">Groups</span>
-                        </Link>
-                        <Link to="/profile" className="flex flex-col items-center gap-1 text-gray-400 hover:text-white">
-                            <Settings className="w-5 h-5" />
-                            <span className="text-[10px] uppercase">Profile</span>
-                        </Link>
-                    </div>
-                </div>
-            </main>
-        </div>
+        </AppLayout>
     );
 }

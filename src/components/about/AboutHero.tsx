@@ -2,7 +2,7 @@ import { Terminal, Cpu } from 'lucide-react';
 
 export default function AboutHero() {
   return (
-    <section className="relative min-h-[70vh] flex flex-col items-center justify-center text-center px-4 bg-[#0a0a0c] overflow-hidden border-b border-white/10">
+    <section className="relative min-h-[70vh] flex flex-col items-center justify-center text-center px-4 bg-darker overflow-hidden border-b border-white/10">
         {/* Grid Background */}
         <div className="absolute inset-0 z-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
         

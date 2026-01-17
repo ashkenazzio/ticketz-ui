@@ -35,7 +35,7 @@ export default function CommunityLeaders() {
                         <img 
                             src={leader.img} 
                             alt={leader.name} 
-                            className="w-full h-full object-cover filter grayscale group-hover:grayscale-0 transition-all duration-500"
+                            className="w-full h-full object-cover transition-all duration-500"
                         />
                          {/* Hover Video Overlay Placeholder */}
                          <div className="absolute inset-0 bg-lime/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">

@@ -11,7 +11,7 @@ export default function CommunitiesHero() {
             <img 
                 src={`${BASE}event-images/people-gathering.jpg`}
                 alt="Background" 
-                className="w-full h-full object-cover opacity-40 grayscale contrast-125"
+                className="w-full h-full object-cover opacity-40 contrast-125"
             />
             <div className="absolute inset-0 bg-gradient-to-b from-dark/80 via-dark/40 to-dark"></div>
         </div>

@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Users, Settings, ExternalLink, Crown, Shield } from 'lucide-react';
-import Navbar from '../../components/Navbar';
-import Footer from '../../components/Footer';
+import { Users, Settings, ExternalLink, Crown, Shield } from 'lucide-react';
+import AppLayout from '../../layouts/AppLayout';
 
 interface CommunityMembership {
   id: string;
@@ -52,37 +51,20 @@ const roleConfig = {
 
 export default function MyCommunities() {
   return (
-    <div className="bg-dark min-h-screen text-white font-sans selection:bg-lime selection:text-black">
-      <Navbar />
-
-      <main className="pt-24 pb-20">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6">
-          {/* Header */}
-          <div className="mb-8">
-            <Link
-              to="/app"
-              className="inline-flex items-center gap-2 text-gray-400 hover:text-white text-sm mb-4 transition-colors"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Back to App
-            </Link>
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="font-display text-3xl sm:text-4xl font-semibold uppercase tracking-tight">
-                  My Communities
-                </h1>
-                <p className="text-gray-400 text-sm mt-1">
-                  {myCommunities.length} communities joined
-                </p>
-              </div>
-              <Link
-                to="/communities"
-                className="hidden sm:flex items-center gap-2 text-lime hover:text-limehover text-sm uppercase tracking-wide font-semibold transition-colors"
-              >
-                Discover More <ExternalLink className="w-4 h-4" />
-              </Link>
-            </div>
-          </div>
+    <AppLayout title="My Communities">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6">
+        {/* Subtitle + CTA */}
+        <div className="flex items-center justify-between mb-6">
+          <p className="text-gray-400 text-sm">
+            {myCommunities.length} communities joined
+          </p>
+          <Link
+            to="/communities"
+            className="hidden sm:flex items-center gap-2 text-lime hover:text-limehover text-sm uppercase tracking-wide font-semibold transition-colors"
+          >
+            Discover More <ExternalLink className="w-4 h-4" />
+          </Link>
+        </div>
 
           {/* Communities Grid */}
           {myCommunities.length > 0 ? (
@@ -171,19 +153,16 @@ export default function MyCommunities() {
             </div>
           )}
 
-          {/* Mobile CTA */}
-          <div className="mt-8 sm:hidden text-center">
-            <Link
-              to="/communities"
-              className="inline-flex items-center gap-2 text-lime text-sm uppercase tracking-wide font-semibold"
-            >
-              Discover More Communities <ExternalLink className="w-4 h-4" />
-            </Link>
-          </div>
+        {/* Mobile CTA */}
+        <div className="mt-8 sm:hidden text-center">
+          <Link
+            to="/communities"
+            className="inline-flex items-center gap-2 text-lime text-sm uppercase tracking-wide font-semibold"
+          >
+            Discover More Communities <ExternalLink className="w-4 h-4" />
+          </Link>
         </div>
-      </main>
-
-      <Footer />
-    </div>
+      </div>
+    </AppLayout>
   );
 }

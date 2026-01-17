@@ -2,9 +2,9 @@ import { FileJson, FileCode } from 'lucide-react';
 
 export default function TypeSafetySection() {
   return (
-    <section className="py-24 bg-[#0a0a0c] border-b border-white/5">
+    <section className="py-24 bg-darker border-b border-white/5">
          <div className="max-w-6xl mx-auto px-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 border border-white/10 rounded-sm overflow-hidden bg-[#0d1216]">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 border border-white/10 rounded-sm overflow-hidden bg-dark">
                 
                 {/* Left Pane: Backend DTO */}
                 <div className="p-6 border-b lg:border-b-0 lg:border-r border-white/10 relative">

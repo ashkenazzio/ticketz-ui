@@ -2,7 +2,7 @@ import { QrCode, CheckCircle2 } from 'lucide-react';
 
 export default function DiscoveryWallet() {
   return (
-    <section className="bg-[#0f0f16] py-20 border-t border-white/5">
+    <section className="bg-dark py-20 border-t border-white/5">
         <div className="max-w-4xl mx-auto px-6 text-center">
             <h2 className="font-display text-4xl font-semibold uppercase tracking-tighter mb-4">Your Digital Wallet</h2>
             <p className="text-gray-400 mb-12">Seamless entry. No paper, no hassle.</p>
@@ -26,8 +26,8 @@ export default function DiscoveryWallet() {
                     {/* Ticket Body */}
                     <div className="p-6 bg-[#E5E5E5] relative">
                         {/* Perforated Line Visual */}
-                        <div className="absolute -left-3 top-0 w-6 h-6 bg-[#0f0f16] rounded-full translate-y-[-50%]"></div>
-                        <div className="absolute -right-3 top-0 w-6 h-6 bg-[#0f0f16] rounded-full translate-y-[-50%]"></div>
+                        <div className="absolute -left-3 top-0 w-6 h-6 bg-dark rounded-full translate-y-[-50%]"></div>
+                        <div className="absolute -right-3 top-0 w-6 h-6 bg-dark rounded-full translate-y-[-50%]"></div>
                         <div className="border-t-2 border-dashed border-gray-400 w-full absolute top-0 left-0"></div>
 
                         <div className="flex flex-col items-center justify-center pt-4">

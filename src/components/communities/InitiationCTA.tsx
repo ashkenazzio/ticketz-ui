@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 export default function InitiationCTA() {
   return (
-    <section className="py-32 bg-black text-center border-t border-white/10">
+    <section className="py-32 bg-dark text-center border-t border-white/10">
         <div className="max-w-2xl mx-auto px-6">
             <h2 className="font-display text-5xl md:text-6xl font-semibold uppercase tracking-tighter mb-6 text-white">
                 Have a Vision?

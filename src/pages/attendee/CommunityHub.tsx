@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import Navbar from '../../components/Navbar';
-import Footer from '../../components/Footer';
+import AppHeader from '../../components/AppHeader';
+import AppFooter from '../../components/AppFooter';
 import {
   Users, Calendar, ArrowRight, Bookmark, MapPin,
   Settings, UserPlus, UserMinus, Shield, BarChart3,
@@ -74,8 +74,8 @@ export default function CommunityHub() {
   const [showAdminMenu, setShowAdminMenu] = useState(false);
 
   return (
-    <div className="bg-dark min-h-screen text-white font-sans selection:bg-lime selection:text-black">
-      <Navbar />
+    <div className="bg-dark min-h-screen text-white font-sans selection:bg-lime selection:text-black flex flex-col">
+      <AppHeader />
 
       {/* Branded Header Banner */}
       <div className="relative h-64 md:h-80 w-full overflow-hidden">
@@ -290,7 +290,7 @@ export default function CommunityHub() {
         </div>
 
         {/* View All Events Link */}
-        <div className="mt-8 text-center">
+        <div className="mt-8 mb-20 md:mb-8 text-center">
           <Link
             to="/discovery"
             className="inline-flex items-center gap-2 text-gray-400 hover:text-lime text-sm uppercase tracking-wide transition-colors"
@@ -300,7 +300,9 @@ export default function CommunityHub() {
         </div>
       </div>
 
-      <Footer />
+      <div className="mt-auto">
+        <AppFooter />
+      </div>
     </div>
   );
 }

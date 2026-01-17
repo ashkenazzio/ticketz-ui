@@ -8,8 +8,8 @@ import AppHub from './pages/AppHub';
 import Discovery from './pages/Discovery';
 import Communities from './pages/Communities';
 import About from './pages/About';
-import HowItWorks from './pages/HowItWorks';
-import ForOrganizers from './pages/ForOrganizers';
+import Attendees from './pages/Attendees';
+import Organizers from './pages/Organizers';
 
 // Auth Pages
 import Login from './pages/auth/Login';
@@ -55,8 +55,8 @@ function App() {
         <Route path="/discovery" element={<Discovery />} />
         <Route path="/communities" element={<Communities />} />
         <Route path="/about" element={<About />} />
-        <Route path="/how-it-works" element={<HowItWorks />} />
-        <Route path="/for-organizers" element={<ForOrganizers />} />
+        <Route path="/attendees" element={<Attendees />} />
+        <Route path="/organizers" element={<Organizers />} />
 
         {/* Auth */}
         <Route path="/auth/login" element={<Login />} />

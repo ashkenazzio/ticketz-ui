@@ -1,11 +1,10 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  ArrowLeft, User, Bell, Shield, Link2, Trash2,
+  User, Bell, Shield, Link2, Trash2,
   Camera, Instagram, Facebook, Globe, ChevronRight
 } from 'lucide-react';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
+import AppLayout from '../layouts/AppLayout';
 
 export default function Settings() {
   const [activeTab, setActiveTab] = useState<'profile' | 'notifications' | 'connected' | 'privacy'>('profile');
@@ -34,27 +33,12 @@ export default function Settings() {
   ];
 
   return (
-    <div className="bg-dark min-h-screen text-white font-sans selection:bg-lime selection:text-black">
-      <Navbar />
-
-      <main className="pt-24 pb-20">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6">
-          {/* Header */}
-          <div className="mb-8">
-            <Link
-              to="/app"
-              className="inline-flex items-center gap-2 text-gray-400 hover:text-white text-sm mb-4 transition-colors"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Back to App
-            </Link>
-            <h1 className="font-display text-3xl sm:text-4xl font-semibold uppercase tracking-tight">
-              Settings
-            </h1>
-            <p className="text-gray-400 text-sm mt-1">
-              Manage your account preferences
-            </p>
-          </div>
+    <AppLayout title="Settings">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6">
+        {/* Subtitle */}
+        <p className="text-gray-400 text-sm mb-6">
+          Manage your account preferences
+        </p>
 
           {/* Tab Navigation */}
           <div className="flex gap-2 mb-8 overflow-x-auto pb-2">
@@ -314,10 +298,7 @@ export default function Settings() {
               </div>
             </div>
           )}
-        </div>
-      </main>
-
-      <Footer />
-    </div>
+      </div>
+    </AppLayout>
   );
 }

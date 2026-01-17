@@ -14,7 +14,7 @@ export default function TrendingEvents() {
                     <img 
                         src={SARAH_IMG} 
                         alt="Sarah Jenkins" 
-                        className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+                        className="w-full h-full object-cover transition-all duration-700"
                     />
                     <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-dark via-dark/80 to-transparent">
                         <div className="text-lime font-mono text-xs uppercase tracking-widest mb-2">Founder, Neon Sunrise</div>

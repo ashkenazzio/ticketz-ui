@@ -46,7 +46,7 @@ export default function FrequencyDiscovery() {
                 <Link 
                     to={`/category/${cat.id}`} 
                     key={cat.id} 
-                    className="relative flex-shrink-0 w-[80vw] md:w-[25vw] aspect-[9/16] bg-gray-800 snap-center group overflow-hidden"
+                    className="relative flex-shrink-0 w-[80vw] md:w-[25vw] aspect-[9/16] bg-gray-800 snap-center group overflow-hidden rounded-lg"
                 >
                     <img 
                         src={cat.image} 

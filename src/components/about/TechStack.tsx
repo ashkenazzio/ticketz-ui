@@ -2,7 +2,7 @@ import { Layers } from 'lucide-react';
 
 export default function TechStack() {
   return (
-    <section className="py-20 bg-[#0a0a0c] border-b border-white/5 text-center">
+    <section className="py-20 bg-darker border-b border-white/5 text-center">
         <div className="max-w-4xl mx-auto px-6">
             <h2 className="font-mono text-2xl text-white mb-12 flex items-center justify-center gap-3">
                 <Layers className="w-5 h-5 text-lime" /> The Stack

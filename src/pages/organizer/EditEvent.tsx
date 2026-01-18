@@ -4,7 +4,6 @@ import {
   ArrowLeft, Save, Eye, Calendar, MapPin, Clock, Users,
   DollarSign, Image, Plus, Trash2, GripVertical
 } from 'lucide-react';
-import DashboardLayout from '../../layouts/DashboardLayout';
 
 // Mock event data
 const mockEvent = {
@@ -101,7 +100,7 @@ export default function EditEvent() {
   };
 
   return (
-    <DashboardLayout title="Edit Event">
+    <>
       {/* Header */}
       <div className="mb-6">
         <Link
@@ -586,6 +585,6 @@ export default function EditEvent() {
           </div>
         )}
       </div>
-    </DashboardLayout>
+    </>
   );
 }

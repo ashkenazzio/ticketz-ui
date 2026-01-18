@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import Navbar from '../../components/Navbar';
 import { Calendar, MapPin, Clock, Share2, ArrowLeft } from 'lucide-react';
 
 const artists = [
@@ -13,10 +12,7 @@ const artists = [
 
 export default function EventDetails() {
   return (
-    <div className="bg-dark min-h-screen text-white font-sans selection:bg-lime selection:text-black">
-      <Navbar />
-      
-      <div className="flex flex-col lg:flex-row min-h-screen pt-20">
+    <div className="flex flex-col lg:flex-row min-h-screen">
         
         {/* Left: Poster / Immersive Visual */}
         <div className="lg:w-1/2 h-[50vh] lg:h-[calc(100vh-80px)] relative lg:fixed lg:left-0 lg:top-20 z-0">
@@ -124,8 +120,6 @@ export default function EventDetails() {
                 </Link>
             </div>
         </div>
-
       </div>
-    </div>
   );
 }

@@ -1,5 +1,4 @@
 import { BarChart3, TrendingUp, Users, DollarSign, Calendar, ArrowUp, ArrowDown } from 'lucide-react';
-import DashboardLayout from '../../layouts/DashboardLayout';
 import SalesChart from '../../components/dashboard/SalesChart';
 
 const stats = [
@@ -48,7 +47,7 @@ const recentActivity = [
 
 export default function Analytics() {
   return (
-    <DashboardLayout title="Analytics">
+    <>
       {/* Header */}
       <div className="mb-8">
         <h1 className="font-display text-2xl font-semibold uppercase tracking-tight">
@@ -168,6 +167,6 @@ export default function Analytics() {
           </div>
         </div>
       </div>
-    </DashboardLayout>
+    </>
   );
 }

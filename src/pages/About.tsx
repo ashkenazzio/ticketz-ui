@@ -1,5 +1,3 @@
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
 import AboutHero from '../components/about/AboutHero';
 import ArchitectureDiagram from '../components/about/ArchitectureDiagram';
 import TechStack from '../components/about/TechStack';
@@ -12,7 +10,6 @@ import MobileBottomNav from '../components/MobileBottomNav';
 export default function About() {
   return (
     <>
-      <Navbar />
       <AboutHero />
       <ArchitectureDiagram />
       <TechStack />
@@ -20,7 +17,6 @@ export default function About() {
       <DataModel />
       <Infrastructure />
       <NoAIBadge />
-      <Footer />
       <MobileBottomNav />
     </>
   );

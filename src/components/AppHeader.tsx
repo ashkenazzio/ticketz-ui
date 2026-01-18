@@ -9,7 +9,7 @@ interface AppHeaderProps {
 const navItems = [
   { path: '/app', label: 'Home', icon: Home },
   { path: '/wallet', label: 'Tickets', icon: Ticket },
-  { path: '/discovery', label: 'Explore', icon: Search },
+  { path: '/app/search', label: 'Explore', icon: Search },
   { path: '/my-communities', label: 'Groups', icon: Users },
 ];
 

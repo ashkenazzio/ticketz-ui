@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import DashboardLayout from '../../layouts/DashboardLayout';
 import { ArrowRight, Calendar, MapPin, Ticket, Check } from 'lucide-react';
 
 export default function CreateEvent() {
@@ -15,7 +14,7 @@ export default function CreateEvent() {
     };
 
   return (
-    <DashboardLayout title="Create Event">
+    <>
         <div className="max-w-4xl mx-auto">
             
             {/* Progress Tracker */}
@@ -159,6 +158,6 @@ export default function CreateEvent() {
 
             </div>
         </div>
-    </DashboardLayout>
+    </>
   );
 }

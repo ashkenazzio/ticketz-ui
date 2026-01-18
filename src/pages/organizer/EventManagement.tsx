@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
 import { Plus, Search, Calendar, Users, MoreVertical, Edit, Copy, Trash2, BarChart3 } from 'lucide-react';
-import DashboardLayout from '../../layouts/DashboardLayout';
 import type { BadgeStatus } from '../../components/StatusBadge';
 import StatusBadge from '../../components/StatusBadge';
 
@@ -76,7 +75,7 @@ const events: OrganizerEvent[] = [
 
 export default function EventManagement() {
   return (
-    <DashboardLayout title="Events">
+    <>
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
@@ -242,6 +241,6 @@ export default function EventManagement() {
           </Link>
         </div>
       )}
-    </DashboardLayout>
+    </>
   );
 }

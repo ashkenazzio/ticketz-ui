@@ -4,7 +4,7 @@ import {
   User, Bell, Shield, Link2, Trash2,
   Camera, Instagram, Facebook, Globe, ChevronRight
 } from 'lucide-react';
-import AppLayout from '../layouts/AppLayout';
+
 
 export default function Settings() {
   const [activeTab, setActiveTab] = useState<'profile' | 'notifications' | 'connected' | 'privacy'>('profile');
@@ -33,9 +33,9 @@ export default function Settings() {
   ];
 
   return (
-    <AppLayout title="Settings">
+    <div className="pt-20">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6">
-        {/* Subtitle */}
+        <h1 className="font-display text-2xl font-semibold uppercase tracking-tight mb-2">Settings</h1>
         <p className="text-gray-400 text-sm mb-6">
           Manage your account preferences
         </p>
@@ -299,6 +299,6 @@ export default function Settings() {
             </div>
           )}
       </div>
-    </AppLayout>
+    </div>
   );
 }

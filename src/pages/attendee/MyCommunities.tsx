@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
 import { Users, Settings, ExternalLink, Crown, Shield } from 'lucide-react';
-import AppLayout from '../../layouts/AppLayout';
 
 interface CommunityMembership {
   id: string;
@@ -51,8 +50,9 @@ const roleConfig = {
 
 export default function MyCommunities() {
   return (
-    <AppLayout title="My Communities">
+    <div className="pt-20">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6">
+        <h1 className="font-display text-2xl font-semibold uppercase tracking-tight mb-2">My Communities</h1>
         {/* Subtitle + CTA */}
         <div className="flex items-center justify-between mb-6">
           <p className="text-gray-400 text-sm">
@@ -163,6 +163,6 @@ export default function MyCommunities() {
           </Link>
         </div>
       </div>
-    </AppLayout>
+    </div>
   );
 }

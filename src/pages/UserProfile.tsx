@@ -1,4 +1,3 @@
-import DashboardLayout from '../layouts/DashboardLayout';
 import { Settings, Calendar, Users, Heart } from 'lucide-react';
 
 const myCommunities = [
@@ -14,7 +13,7 @@ const pastEvents = [
 
 export default function UserProfile() {
   return (
-    <DashboardLayout title="My Profile">
+    <>
         <div className="max-w-5xl">
             
             {/* Header Profile Card */}
@@ -128,7 +127,7 @@ export default function UserProfile() {
 
             </div>
         </div>
-    </DashboardLayout>
+    </>
   );
 }
 

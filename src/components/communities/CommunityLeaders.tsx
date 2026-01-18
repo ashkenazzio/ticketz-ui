@@ -1,4 +1,3 @@
-
 const LEADERS = [
     {
         name: "Marcus",
@@ -22,34 +21,47 @@ const LEADERS = [
 
 export default function CommunityLeaders() {
   return (
-    <section className="py-24 max-w-7xl mx-auto px-4 md:px-6">
-        <h2 className="font-display text-center text-4xl font-semibold uppercase tracking-tighter mb-20">
-            Meet the Curators.
-        </h2>
+    <section className="py-16 max-w-5xl mx-auto px-4 md:px-6">
+        <div className="text-center mb-12">
+            <h2 className="font-display text-3xl md:text-4xl font-semibold uppercase tracking-tighter">
+                Meet the Curators.
+            </h2>
+        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6">
             {LEADERS.map((leader, i) => (
-                <div key={i} className="group flex flex-col items-center">
-                    {/* Avatar Container */}
-                    <div className="relative w-48 h-48 md:w-56 md:h-56 rounded-full overflow-hidden mb-8 border-2 border-white/10 group-hover:border-lime transition-colors duration-500">
-                        <img 
-                            src={leader.img} 
-                            alt={leader.name} 
-                            className="w-full h-full object-cover transition-all duration-500"
+                <div
+                    key={i}
+                    className="group relative bg-surface border border-white/5 hover:border-lime/30 transition-all duration-500 overflow-hidden"
+                >
+                    {/* Image Container */}
+                    <div className="relative aspect-square overflow-hidden">
+                        <img
+                            src={leader.img}
+                            alt={leader.name}
+                            className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105 brightness-75 group-hover:brightness-90"
                         />
-                         {/* Hover Video Overlay Placeholder */}
-                         <div className="absolute inset-0 bg-lime/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                            {/* In a real implementation, a video would play here */}
-                         </div>
+                        {/* Gradient Overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-transparent" />
                     </div>
-                    
-                    <blockquote className="font-serif text-xl italic text-gray-300 mb-6 max-w-xs">
-                        "{leader.quote}"
-                    </blockquote>
-                    
-                    <div>
-                        <div className="font-display font-bold uppercase tracking-wide text-white">{leader.name}</div>
-                        <div className="text-lime text-xs font-mono uppercase tracking-widest">{leader.role}</div>
+
+                    {/* Content */}
+                    <div className="p-5 flex flex-col h-48">
+                        {/* Quote */}
+                        <blockquote className="font-serif text-lg text-gray-200 leading-relaxed flex-1">
+                            "{leader.quote}"
+                        </blockquote>
+
+                        {/* Divider + Author Info pinned to bottom */}
+                        <div>
+                            <div className="w-8 group-hover:w-full h-px bg-white/10 group-hover:bg-lime/50 transition-all duration-500 mb-3" />
+                            <div className="font-display text-base font-semibold uppercase tracking-wide text-white">
+                                {leader.name}
+                            </div>
+                            <div className="text-lime/70 text-xs font-mono uppercase tracking-widest">
+                                {leader.role}
+                            </div>
+                        </div>
                     </div>
                 </div>
             ))}

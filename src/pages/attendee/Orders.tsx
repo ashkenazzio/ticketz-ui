@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Receipt, Filter } from 'lucide-react';
-import AppLayout from '../../layouts/AppLayout';
 import OrderCard from '../../components/OrderCard';
 import type { BadgeStatus } from '../../components/StatusBadge';
 
@@ -94,8 +93,9 @@ export default function Orders() {
     .toFixed(2);
 
   return (
-    <AppLayout title="Order History">
+    <div className="pt-20">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6">
+        <h1 className="font-display text-2xl font-semibold uppercase tracking-tight mb-2">Order History</h1>
         {/* Stats Subtitle */}
         <p className="text-gray-400 text-sm mb-6">
           {orderCounts.all} orders • ${totalSpent} total spent
@@ -192,6 +192,6 @@ export default function Orders() {
             </div>
           )}
       </div>
-    </AppLayout>
+    </div>
   );
 }

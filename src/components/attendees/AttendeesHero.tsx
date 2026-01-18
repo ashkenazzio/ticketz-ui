@@ -68,7 +68,7 @@ export default function AttendeesHero() {
         <div className="hidden lg:flex items-center justify-center relative perspective-1000 h-[600px] w-full">
           <div className="relative w-[400px] h-[500px]">
              {/* Floating Notification */}
-             <div className="absolute -top-12 -right-12 bg-surface/90 backdrop-blur-md border border-white/10 p-4 rounded-full flex items-center gap-3 shadow-float z-20 animate-float-delayed">
+             <div className="absolute -top-12 -right-12 bg-surface border border-white/10 p-3 rounded-lg flex items-center gap-3 shadow-float z-20 animate-float-delayed">
                 <div className="flex -space-x-2">
                     <img 
                       src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=80" 

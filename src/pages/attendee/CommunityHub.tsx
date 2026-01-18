@@ -1,7 +1,5 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import AppHeader from '../../components/AppHeader';
-import AppFooter from '../../components/AppFooter';
 import {
   Users, Calendar, ArrowRight, Bookmark, MapPin,
   Settings, UserPlus, UserMinus, Shield, BarChart3,
@@ -74,9 +72,7 @@ export default function CommunityHub() {
   const [showAdminMenu, setShowAdminMenu] = useState(false);
 
   return (
-    <div className="bg-dark min-h-screen text-white font-sans selection:bg-lime selection:text-black flex flex-col">
-      <AppHeader />
-
+    <>
       {/* Branded Header Banner */}
       <div className="relative h-64 md:h-80 w-full overflow-hidden">
         <img
@@ -299,10 +295,6 @@ export default function CommunityHub() {
           </Link>
         </div>
       </div>
-
-      <div className="mt-auto">
-        <AppFooter />
-      </div>
-    </div>
+    </>
   );
 }

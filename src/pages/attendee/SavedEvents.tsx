@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
 import { Heart, Calendar, MapPin, ArrowRight, Bookmark } from 'lucide-react';
-import AppLayout from '../../layouts/AppLayout';
 
 interface SavedEvent {
   id: string;
@@ -44,9 +43,9 @@ const savedEvents: SavedEvent[] = [
 
 export default function SavedEvents() {
   return (
-    <AppLayout title="Saved Events">
+    <div className="pt-20">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6">
-        {/* Stats Subtitle */}
+        <h1 className="font-display text-2xl font-semibold uppercase tracking-tight mb-2">Saved Events</h1>
         <p className="text-gray-400 text-sm mb-6">
           {savedEvents.length} events saved
         </p>
@@ -126,6 +125,6 @@ export default function SavedEvents() {
             </div>
           )}
       </div>
-    </AppLayout>
+    </div>
   );
 }

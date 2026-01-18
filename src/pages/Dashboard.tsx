@@ -1,4 +1,3 @@
-import DashboardLayout from '../layouts/DashboardLayout';
 import StatCard from '../components/dashboard/StatCard';
 import SalesChart from '../components/dashboard/SalesChart';
 import RecentActivityTable from '../components/dashboard/RecentActivityTable';
@@ -7,7 +6,7 @@ import { Link } from 'react-router-dom';
 
 export default function Dashboard() {
   return (
-    <DashboardLayout>
+    <>
         {/* Header Action */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-8">
             <div>
@@ -62,6 +61,6 @@ export default function Dashboard() {
         <div>
             <RecentActivityTable />
         </div>
-    </DashboardLayout>
+    </>
   );
 }

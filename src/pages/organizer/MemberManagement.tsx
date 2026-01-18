@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Search, Users, MoreVertical, Shield, Crown, UserMinus, Mail, Calendar, Ticket } from 'lucide-react';
-import DashboardLayout from '../../layouts/DashboardLayout';
 
 type MemberRole = 'admin' | 'moderator' | 'member';
 
@@ -103,7 +102,7 @@ export default function MemberManagement() {
   };
 
   return (
-    <DashboardLayout title="Members">
+    <>
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
@@ -266,6 +265,6 @@ export default function MemberManagement() {
           </p>
         </div>
       )}
-    </DashboardLayout>
+    </>
   );
 }

@@ -3,7 +3,6 @@ import {
     Ticket, Users, Calendar, Search, ArrowRight, Sparkles,
     ShoppingBag, Heart, ChevronRight
 } from 'lucide-react';
-import AppLayout from '../layouts/AppLayout';
 
 const quickActions = [
     {
@@ -98,8 +97,8 @@ const upcomingTickets = [
 
 export default function AppHub() {
     return (
-        <AppLayout>
-            <div className="px-4 py-6">
+        <>
+            <div className="px-4 py-6 pt-24">
                 <div className="max-w-5xl mx-auto">
                     {/* Welcome */}
                     <div className="mb-6">
@@ -286,6 +285,6 @@ export default function AppHub() {
                         </div>
                     </div>
                 </section>
-        </AppLayout>
+        </>
     );
 }

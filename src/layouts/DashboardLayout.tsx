@@ -1,13 +1,9 @@
 import { useState } from 'react';
+import { Outlet } from 'react-router-dom';
 import { Bell, ChevronRight, Menu } from 'lucide-react';
 import Sidebar from '../components/dashboard/Sidebar';
 
-interface DashboardLayoutProps {
-    children: React.ReactNode;
-    title?: string;
-}
-
-export default function DashboardLayout({ children, title = "Overview" }: DashboardLayoutProps) {
+export default function DashboardLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
@@ -31,7 +27,7 @@ export default function DashboardLayout({ children, title = "Overview" }: Dashbo
                     <div className="flex items-center gap-2 text-sm text-gray-400">
                         <span className="hover:text-white cursor-pointer transition-colors hidden sm:inline">Dashboard</span>
                         <ChevronRight className="w-4 h-4 hidden sm:block" />
-                        <span className="text-white font-medium">{title}</span>
+                        <span className="text-white font-medium">Overview</span>
                     </div>
                 </div>
 
@@ -56,7 +52,7 @@ export default function DashboardLayout({ children, title = "Overview" }: Dashbo
 
             {/* Content Scrollable Area */}
             <main className="flex-1 p-4 lg:p-8">
-                {children}
+                <Outlet />
             </main>
         </div>
     </div>

@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Ticket, Filter } from 'lucide-react';
-import AppLayout from '../../layouts/AppLayout';
 import TicketCard from '../../components/TicketCard';
 import type { BadgeStatus } from '../../components/StatusBadge';
 
@@ -109,9 +108,9 @@ export default function Wallet() {
   };
 
   return (
-    <AppLayout title="My Tickets">
+    <div className="pt-20">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6">
-        {/* Stats Subtitle */}
+        <h1 className="font-display text-2xl font-semibold uppercase tracking-tight mb-2">My Tickets</h1>
         <p className="text-gray-400 text-sm mb-6">
           {ticketCounts.upcoming} upcoming • {ticketCounts.past} past
         </p>
@@ -199,6 +198,6 @@ export default function Wallet() {
             </div>
           )}
       </div>
-    </AppLayout>
+    </div>
   );
 }

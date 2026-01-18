@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ArrowLeft, Search, Download, Mail, Check, X, QrCode, Filter } from 'lucide-react';
-import DashboardLayout from '../../layouts/DashboardLayout';
 import type { BadgeStatus } from '../../components/StatusBadge';
 import StatusBadge from '../../components/StatusBadge';
 
@@ -49,7 +48,7 @@ export default function GuestList() {
   };
 
   return (
-    <DashboardLayout title="Guest List">
+    <>
       {/* Header */}
       <div className="mb-6">
         <Link
@@ -201,6 +200,6 @@ export default function GuestList() {
           </p>
         </div>
       )}
-    </DashboardLayout>
+    </>
   );
 }

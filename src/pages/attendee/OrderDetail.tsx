@@ -1,6 +1,5 @@
 import { Link, useParams } from 'react-router-dom';
 import { Download, Calendar, MapPin, Ticket, CreditCard, Check, Clock } from 'lucide-react';
-import AppLayout from '../../layouts/AppLayout';
 import StatusBadge from '../../components/StatusBadge';
 
 // Mock order data - in real app, would fetch based on params.id
@@ -38,9 +37,9 @@ export default function OrderDetail() {
   const { id } = useParams();
 
   return (
-    <AppLayout title={`Order ${orderData.id}`}>
+    <div className="pt-20">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6">
-        {/* Order Meta */}
+        <h1 className="font-display text-2xl font-semibold uppercase tracking-tight mb-2">Order {orderData.id}</h1>
         <div className="flex items-center justify-between mb-6">
           <p className="text-gray-400 text-sm">
             Placed on {orderData.createdAt}
@@ -174,6 +173,6 @@ export default function OrderDetail() {
             </button>
           </div>
       </div>
-    </AppLayout>
+    </div>
   );
 }

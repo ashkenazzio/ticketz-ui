@@ -1,29 +1,63 @@
-import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const BASE = import.meta.env.BASE_URL;
 
+// Creative titles and curated images for each category
 const CATEGORIES = [
+    {
+        id: 'music',
+        title: 'Sound Chasers',
+        subtitle: 'From underground raves to intimate sessions',
+        image: `${BASE}event-images/techno-gathering-2.jpg`
+    },
     {
         id: 'tech',
         title: 'Builders & Hackers',
-        image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80'
+        subtitle: 'Where ideas become reality',
+        image: `${BASE}event-images/tech-conference.jpg`
+    },
+    {
+        id: 'fitness',
+        title: 'Movement Culture',
+        subtitle: 'Push limits, find your tribe',
+        image: `${BASE}event-images/running-event.jpg`
+    },
+    {
+        id: 'creative',
+        title: 'The Creators',
+        subtitle: 'Art, design & everything in between',
+        image: `${BASE}event-images/painting-workshop.jpg`
+    },
+    {
+        id: 'social',
+        title: 'Scene Makers',
+        subtitle: 'Connect, celebrate, belong',
+        image: `${BASE}event-images/people-gathering.jpg`
     },
     {
         id: 'wellness',
-        title: 'Breath & Movement',
-        image: `${BASE}event-images/yoga-event-2.jpg`
+        title: 'Inner Circle',
+        subtitle: 'Mind, body & soul alignment',
+        image: `${BASE}event-images/yoga-event.jpg`
     },
     {
-        id: 'nightlife',
-        title: 'After Hours',
-        image: `${BASE}event-images/techno-gathering.jpg`
+        id: 'food',
+        title: 'Taste Hunters',
+        subtitle: 'Culinary adventures await',
+        image: `${BASE}event-images/market.jpg`
     },
     {
-        id: 'art',
-        title: 'Creators',
-        image: `${BASE}event-images/painting-class.jpg`
-    }
+        id: 'sports',
+        title: 'Game On',
+        subtitle: 'Competition fuels connection',
+        image: `${BASE}event-images/surf-shop.jpg`
+    },
+    {
+        id: 'gaming',
+        title: 'Player One',
+        subtitle: 'Level up together',
+        image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=800&q=80'
+    },
 ];
 
 export default function FrequencyDiscovery() {
@@ -43,23 +77,26 @@ export default function FrequencyDiscovery() {
         {/* Horizontal Scroll Container */}
         <div className="flex gap-4 overflow-x-auto pb-8 px-4 md:px-6 snap-x snap-mandatory scrollbar-hide">
             {CATEGORIES.map((cat) => (
-                <Link 
-                    to={`/category/${cat.id}`} 
-                    key={cat.id} 
-                    className="relative flex-shrink-0 w-[80vw] md:w-[25vw] aspect-[9/16] bg-gray-800 snap-center group overflow-hidden rounded-lg"
+                <Link
+                    to={`/app/search?type=communities&category=${cat.id}`}
+                    key={cat.id}
+                    className="relative flex-shrink-0 w-[70vw] sm:w-[45vw] md:w-[30vw] lg:w-[22vw] aspect-[9/16] bg-gray-800 snap-center group overflow-hidden rounded-lg"
                 >
-                    <img 
-                        src={cat.image} 
-                        alt={cat.title} 
+                    <img
+                        src={cat.image}
+                        alt={cat.title}
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 filter brightness-75 group-hover:brightness-100"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-dark via-transparent to-transparent opacity-90"></div>
-                    
-                    <div className="absolute bottom-0 left-0 p-8">
-                        <h3 className="font-display text-3xl font-semibold uppercase tracking-tight text-white leading-none mb-2">
+                    <div className="absolute inset-0 bg-gradient-to-t from-dark via-dark/30 to-transparent opacity-90"></div>
+
+                    <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8">
+                        <h3 className="font-display text-2xl sm:text-3xl font-semibold uppercase tracking-tight text-white leading-none mb-2">
                             {cat.title}
                         </h3>
-                         <div className="w-0 group-hover:w-full h-1 bg-lime transition-all duration-500"></div>
+                        <p className="text-gray-400 text-xs sm:text-sm mb-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            {cat.subtitle}
+                        </p>
+                        <div className="w-0 group-hover:w-full h-1 bg-lime transition-all duration-500"></div>
                     </div>
                 </Link>
             ))}

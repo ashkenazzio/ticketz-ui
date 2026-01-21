@@ -102,9 +102,12 @@ export default function TicketCard({
           View Event <ChevronRight className="w-3 h-3" />
         </Link>
         {isActive && (
-          <button className="text-xs text-lime hover:text-limehover uppercase tracking-wide font-semibold transition-colors">
+          <Link
+            to={`/ticket/${id}`}
+            className="text-xs text-lime hover:text-limehover uppercase tracking-wide font-semibold transition-colors"
+          >
             Show QR
-          </button>
+          </Link>
         )}
       </div>
     </div>

@@ -62,7 +62,7 @@ export default function UserTypeSelection() {
                     </li>
                     <li className="flex items-start gap-3 text-gray-300">
                         <Check className="w-5 h-5 text-lime flex-shrink-0 mt-0.5" />
-                        <span>Scanner app for door entry</span>
+                        <span>Guest list management</span>
                     </li>
                     <li className="flex items-start gap-3 text-gray-300">
                         <Check className="w-5 h-5 text-lime flex-shrink-0 mt-0.5" />

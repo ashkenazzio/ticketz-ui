@@ -19,7 +19,7 @@ export default function AttendeeCTA() {
                     Thousands of events are happening right now. Don't sit this one out.
                 </p>
                 <Link 
-                    to="/discovery"
+                    to="/events"
                     className="inline-flex items-center gap-2 bg-white text-dark font-bold px-8 py-4 rounded-lg hover:bg-gray-200 transition-colors"
                 >
                     Browse Communities <ArrowRight className="w-5 h-5" />

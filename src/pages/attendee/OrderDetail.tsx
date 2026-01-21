@@ -1,40 +1,121 @@
+import { useMemo } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Download, Calendar, MapPin, Ticket, CreditCard, Check, Clock } from 'lucide-react';
 import StatusBadge from '../../components/StatusBadge';
+import { useData } from '../../context/DataContext';
+import type { BadgeStatus } from '../../components/StatusBadge';
 
-// Mock order data - in real app, would fetch based on params.id
-const orderData = {
-  id: 'ORD-2847',
-  status: 'approved' as const,
-  createdAt: 'Nov 1, 2026 • 3:45 PM',
-  event: {
-    id: '1',
-    name: 'Electric Garden',
-    date: 'Nov 12, 2026',
-    time: '12:00 PM',
-    venue: 'Warehouse District, LA',
-    image: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&q=80',
-  },
-  tickets: [
-    { id: 'TKT-001', tier: 'General Admission', price: 45, quantity: 1 },
-    { id: 'TKT-002', tier: 'VIP Access', price: 95, quantity: 1 },
-  ],
-  subtotal: 140,
-  fees: 8.40,
-  total: 148.40,
-  payment: {
-    method: 'Visa •••• 4242',
-    status: 'completed',
-  },
-  timeline: [
-    { status: 'Order Placed', time: 'Nov 1, 3:45 PM', completed: true },
-    { status: 'Payment Confirmed', time: 'Nov 1, 3:45 PM', completed: true },
-    { status: 'Tickets Delivered', time: 'Nov 1, 3:46 PM', completed: true },
-  ],
-};
+// Helper functions
+function formatOrderDate(isoDate: string): string {
+  const date = new Date(isoDate);
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+function formatOrderDateTime(isoDate: string): string {
+  const date = new Date(isoDate);
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ', ' +
+    date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+}
+
+function formatEventTime(isoDate: string): string {
+  const date = new Date(isoDate);
+  return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+}
+
+function formatCurrency(cents: number): string {
+  return `$${(cents / 100).toFixed(2)}`;
+}
 
 export default function OrderDetail() {
   const { id } = useParams();
+  const { db, currentUser } = useData();
+
+  // Get order data from database
+  const orderData = useMemo(() => {
+    if (!id) return null;
+    const order = db.orders.getById(id);
+    if (!order) return null;
+
+    const event = db.events.getById(order.eventId);
+    const orderTickets = db.tickets.getByUser(order.userId).filter(t => t.orderId === order.id);
+
+    // Get ticket info with tiers
+    const ticketItems = orderTickets.map(ticket => {
+      const tier = db.ticketTiers.getById(ticket.ticketTierId);
+      return {
+        id: ticket.id,
+        tier: tier?.name || 'General',
+        price: tier?.price || 0,
+        quantity: 1,
+      };
+    });
+
+    // Calculate totals
+    const subtotal = ticketItems.reduce((sum, t) => sum + t.price, 0);
+    const fees = Math.round(subtotal * 0.06); // 6% service fee
+    const total = subtotal + fees;
+
+    // Map order status to badge status
+    let status: BadgeStatus;
+    switch (order.status) {
+      case 'completed':
+        status = 'approved';
+        break;
+      case 'pending':
+        status = 'pending';
+        break;
+      case 'refunded':
+      case 'failed':
+        status = 'cancelled';
+        break;
+      default:
+        status = 'pending';
+    }
+
+    // Build timeline
+    const timeline = [
+      { status: 'Order Placed', time: formatOrderDateTime(order.createdAt), completed: true },
+      { status: 'Payment Confirmed', time: formatOrderDateTime(order.createdAt), completed: order.status === 'completed' },
+      { status: 'Tickets Delivered', time: formatOrderDateTime(order.createdAt), completed: order.status === 'completed' },
+    ];
+
+    return {
+      id: order.id,
+      status,
+      createdAt: formatOrderDateTime(order.createdAt),
+      event: {
+        id: event?.id || '',
+        name: event?.title || 'Unknown Event',
+        date: event ? formatOrderDate(event.startTime) : '',
+        time: event ? formatEventTime(event.startTime) : '',
+        venue: event?.venueName || '',
+        image: event?.image || event?.coverImage || '',
+      },
+      tickets: ticketItems,
+      subtotal,
+      fees,
+      total,
+      payment: {
+        method: 'Visa •••• 4242', // Mock payment method - would come from payments table
+        status: order.status === 'completed' ? 'completed' : 'pending',
+      },
+      timeline,
+    };
+  }, [db, id]);
+
+  if (!orderData) {
+    return (
+      <div className="pt-20">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6 text-center">
+          <h1 className="font-display text-2xl font-semibold uppercase tracking-tight mb-2">Order Not Found</h1>
+          <p className="text-gray-400 mb-4">The order you're looking for doesn't exist.</p>
+          <Link to="/orders" className="text-lime hover:text-limehover">
+            Back to Orders
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="pt-20">
@@ -94,7 +175,7 @@ export default function OrderDetail() {
                   </div>
                   <div className="text-right">
                     <div className="text-sm text-gray-400">x{ticket.quantity}</div>
-                    <div className="font-semibold">${ticket.price.toFixed(2)}</div>
+                    <div className="font-semibold">{formatCurrency(ticket.price)}</div>
                   </div>
                 </div>
               ))}
@@ -104,15 +185,15 @@ export default function OrderDetail() {
             <div className="mt-6 pt-4 border-t border-white/10 space-y-2">
               <div className="flex justify-between text-sm text-gray-400">
                 <span>Subtotal</span>
-                <span>${orderData.subtotal.toFixed(2)}</span>
+                <span>{formatCurrency(orderData.subtotal)}</span>
               </div>
               <div className="flex justify-between text-sm text-gray-400">
                 <span>Service Fees</span>
-                <span>${orderData.fees.toFixed(2)}</span>
+                <span>{formatCurrency(orderData.fees)}</span>
               </div>
               <div className="flex justify-between text-lg font-semibold pt-2 border-t border-white/10">
                 <span>Total</span>
-                <span className="text-lime">${orderData.total.toFixed(2)}</span>
+                <span className="text-lime">{formatCurrency(orderData.total)}</span>
               </div>
             </div>
           </div>

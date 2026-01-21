@@ -1,17 +1,9 @@
-import { Search, MapPin, Calendar, Music, Code, Dumbbell, Palette, Users, Sparkles } from 'lucide-react';
+import { Search, MapPin, Calendar } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { CATEGORIES_WITH_ALL } from '../../constants/categories';
 
 const BASE = import.meta.env.BASE_URL;
-
-const CATEGORIES = [
-  { id: 'all', label: 'All Events', icon: Sparkles },
-  { id: 'music', label: 'Music', icon: Music },
-  { id: 'tech', label: 'Tech', icon: Code },
-  { id: 'fitness', label: 'Fitness', icon: Dumbbell },
-  { id: 'art', label: 'Art & Culture', icon: Palette },
-  { id: 'social', label: 'Social', icon: Users },
-];
 
 const ARTWORKS = [
   {
@@ -135,7 +127,7 @@ export default function DiscoveryHero() {
 
         {/* Category Pills */}
         <div className="pt-2 flex flex-wrap justify-center gap-2">
-          {CATEGORIES.map((cat) => {
+          {CATEGORIES_WITH_ALL.map((cat) => {
             const Icon = cat.icon;
             const isActive = activeCategory === cat.id;
             return (

@@ -2,109 +2,88 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Ticket, Filter } from 'lucide-react';
 import TicketCard from '../../components/TicketCard';
+import { useData } from '../../context/DataContext';
 import type { BadgeStatus } from '../../components/StatusBadge';
 
-type FilterTab = 'all' | 'upcoming' | 'past' | 'transferred';
-
-interface TicketData {
-  id: string;
-  eventName: string;
-  eventDate: string;
-  eventTime: string;
-  venue: string;
-  ticketTier: string;
-  status: BadgeStatus;
-  eventImage: string;
-  eventId: string;
-}
-
-// Mock data
-const mockTickets: TicketData[] = [
-  {
-    id: '8X92-MM29-KKS',
-    eventName: 'Electric Garden',
-    eventDate: 'Nov 12, 2026',
-    eventTime: '12:00 PM',
-    venue: 'Warehouse District, LA',
-    ticketTier: 'General Admission',
-    status: 'valid',
-    eventImage: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400&q=80',
-    eventId: '1',
-  },
-  {
-    id: 'JK47-PP82-AAZ',
-    eventName: 'Bass Sector Opening',
-    eventDate: 'Nov 28, 2026',
-    eventTime: '9:00 PM',
-    venue: 'The Underground, NYC',
-    ticketTier: 'VIP',
-    status: 'valid',
-    eventImage: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&q=80',
-    eventId: '2',
-  },
-  {
-    id: 'TT19-XZ44-BBQ',
-    eventName: 'Techno Bunker Session',
-    eventDate: 'Oct 15, 2026',
-    eventTime: '11:00 PM',
-    venue: 'Club Void, Berlin',
-    ticketTier: 'Early Bird',
-    status: 'used',
-    eventImage: 'https://images.unsplash.com/photo-1571266028243-e4733b0f0bb0?w=400&q=80',
-    eventId: '3',
-  },
-  {
-    id: 'HH88-NM12-CCC',
-    eventName: 'Summer Festival 2026',
-    eventDate: 'Aug 20, 2026',
-    eventTime: '2:00 PM',
-    venue: 'Central Park, NYC',
-    ticketTier: 'Weekend Pass',
-    status: 'transferred',
-    eventImage: 'https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=400&q=80',
-    eventId: '4',
-  },
-  {
-    id: 'ZZ99-QQ55-DDD',
-    eventName: 'Rooftop Sessions',
-    eventDate: 'Jul 4, 2026',
-    eventTime: '6:00 PM',
-    venue: 'Sky Lounge, Miami',
-    ticketTier: 'Standard',
-    status: 'expired',
-    eventImage: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&q=80',
-    eventId: '5',
-  },
-];
+type FilterTab = 'all' | 'upcoming' | 'past';
 
 const filterTabs: { key: FilterTab; label: string }[] = [
   { key: 'all', label: 'All Tickets' },
   { key: 'upcoming', label: 'Upcoming' },
   { key: 'past', label: 'Past' },
-  { key: 'transferred', label: 'Transferred' },
 ];
 
+// Helper to format date
+function formatTicketDate(isoDate: string): string {
+  const date = new Date(isoDate);
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+// Helper to format time
+function formatTicketTime(isoDate: string): string {
+  const date = new Date(isoDate);
+  return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+}
+
 export default function Wallet() {
+  const { db, currentUser } = useData();
   const [activeFilter, setActiveFilter] = useState<FilterTab>('all');
 
-  const filteredTickets = mockTickets.filter((ticket) => {
+  if (!currentUser) {
+    return (
+      <div className="pt-20">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6">
+          <p className="text-gray-400">Please log in to view your tickets.</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Get user's tickets from database
+  const userTickets = db.tickets.getByUser(currentUser.id);
+
+  // Map tickets to display format with event and tier info
+  const ticketData = userTickets.map(ticket => {
+    const event = db.events.getById(ticket.eventId);
+    const tier = db.ticketTiers.getById(ticket.ticketTierId);
+    const isPast = event ? new Date(event.endTime) < new Date() : false;
+
+    // Determine badge status
+    let status: BadgeStatus = ticket.status as BadgeStatus;
+    if (ticket.status === 'valid' && isPast) {
+      status = 'expired';
+    }
+
+    return {
+      id: ticket.id,
+      eventName: event?.title || 'Unknown Event',
+      eventDate: event ? formatTicketDate(event.startTime) : '',
+      eventTime: event ? formatTicketTime(event.startTime) : '',
+      venue: event?.venueName || '',
+      ticketTier: tier?.name || 'General',
+      status,
+      eventImage: event?.image || '',
+      eventId: ticket.eventId,
+      isPast,
+    };
+  });
+
+  // Filter based on active tab
+  const filteredTickets = ticketData.filter((ticket) => {
     switch (activeFilter) {
       case 'upcoming':
-        return ticket.status === 'valid';
+        return ticket.status === 'valid' && !ticket.isPast;
       case 'past':
-        return ticket.status === 'used' || ticket.status === 'expired';
-      case 'transferred':
-        return ticket.status === 'transferred';
+        return ticket.status === 'used' || ticket.status === 'expired' || ticket.isPast;
       default:
         return true;
     }
   });
 
   const ticketCounts = {
-    all: mockTickets.length,
-    upcoming: mockTickets.filter((t) => t.status === 'valid').length,
-    past: mockTickets.filter((t) => t.status === 'used' || t.status === 'expired').length,
-    transferred: mockTickets.filter((t) => t.status === 'transferred').length,
+    all: ticketData.length,
+    upcoming: ticketData.filter((t) => t.status === 'valid' && !t.isPast).length,
+    past: ticketData.filter((t) => t.status === 'used' || t.status === 'expired' || t.isPast).length,
   };
 
   return (
@@ -155,12 +134,10 @@ export default function Wallet() {
                   ? "You don't have any upcoming events. Time to explore!"
                   : activeFilter === 'past'
                   ? "No past events yet. Your memories will appear here."
-                  : activeFilter === 'transferred'
-                  ? "You haven't transferred any tickets."
                   : "Your ticket wallet is empty. Discover events and grab your first ticket."}
               </p>
               <Link
-                to="/discovery"
+                to="/events"
                 className="inline-block bg-lime text-dark px-6 py-3 font-semibold uppercase text-sm tracking-wide hover:bg-limehover transition-colors"
               >
                 Explore Events
@@ -169,7 +146,7 @@ export default function Wallet() {
           )}
 
           {/* Quick Stats */}
-          {mockTickets.length > 0 && (
+          {ticketData.length > 0 && (
             <div className="mt-8 grid grid-cols-3 gap-4">
               <div className="bg-surface border border-white/5 p-4 text-center">
                 <div className="text-2xl font-display font-semibold text-lime">
@@ -189,7 +166,7 @@ export default function Wallet() {
               </div>
               <div className="bg-surface border border-white/5 p-4 text-center">
                 <div className="text-2xl font-display font-semibold text-white">
-                  {mockTickets.filter((t) => t.status === 'used').length}
+                  {ticketData.filter((t) => t.status === 'used').length}
                 </div>
                 <div className="text-xs text-gray-400 uppercase tracking-wide mt-1">
                   Events Attended

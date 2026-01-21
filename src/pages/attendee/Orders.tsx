@@ -2,68 +2,10 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Receipt, Filter } from 'lucide-react';
 import OrderCard from '../../components/OrderCard';
+import { useData } from '../../context/DataContext';
 import type { BadgeStatus } from '../../components/StatusBadge';
 
 type FilterTab = 'all' | 'approved' | 'pending' | 'cancelled';
-
-interface OrderData {
-  id: string;
-  eventName: string;
-  eventImage: string;
-  orderDate: string;
-  ticketCount: number;
-  total: string;
-  status: BadgeStatus;
-}
-
-// Mock data
-const mockOrders: OrderData[] = [
-  {
-    id: 'ORD-2847',
-    eventName: 'Electric Garden',
-    eventImage: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400&q=80',
-    orderDate: 'Nov 1, 2026',
-    ticketCount: 2,
-    total: '$90.00',
-    status: 'approved',
-  },
-  {
-    id: 'ORD-2846',
-    eventName: 'Bass Sector Opening',
-    eventImage: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&q=80',
-    orderDate: 'Oct 28, 2026',
-    ticketCount: 1,
-    total: '$75.00',
-    status: 'approved',
-  },
-  {
-    id: 'ORD-2845',
-    eventName: 'Warehouse Rave',
-    eventImage: 'https://images.unsplash.com/photo-1571266028243-e4733b0f0bb0?w=400&q=80',
-    orderDate: 'Oct 25, 2026',
-    ticketCount: 3,
-    total: '$135.00',
-    status: 'pending',
-  },
-  {
-    id: 'ORD-2840',
-    eventName: 'Summer Festival 2026',
-    eventImage: 'https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=400&q=80',
-    orderDate: 'Aug 15, 2026',
-    ticketCount: 2,
-    total: '$180.00',
-    status: 'cancelled',
-  },
-  {
-    id: 'ORD-2835',
-    eventName: 'Techno Bunker Session',
-    eventImage: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&q=80',
-    orderDate: 'Oct 10, 2026',
-    ticketCount: 1,
-    total: '$45.00',
-    status: 'approved',
-  },
-];
 
 const filterTabs: { key: FilterTab; label: string }[] = [
   { key: 'all', label: 'All Orders' },
@@ -72,25 +14,89 @@ const filterTabs: { key: FilterTab; label: string }[] = [
   { key: 'cancelled', label: 'Cancelled' },
 ];
 
+// Helper to format date
+function formatOrderDate(isoDate: string): string {
+  const date = new Date(isoDate);
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+// Helper to format currency (cents to dollars)
+function formatCurrency(cents: number): string {
+  return `$${(cents / 100).toFixed(2)}`;
+}
+
 export default function Orders() {
+  const { db, currentUser } = useData();
   const [activeFilter, setActiveFilter] = useState<FilterTab>('all');
 
-  const filteredOrders = mockOrders.filter((order) => {
+  if (!currentUser) {
+    return (
+      <div className="pt-20">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6">
+          <p className="text-gray-400">Please log in to view your orders.</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Get user's orders from database
+  const userOrders = db.orders.getByUser(currentUser.id);
+
+  // Map orders to display format with event info
+  const orderData = userOrders.map(order => {
+    const event = db.events.getById(order.eventId);
+    // Count tickets for this order
+    const orderTickets = db.tickets.getByUser(currentUser.id).filter(t => t.orderId === order.id);
+
+    // Map order status to badge status
+    let status: BadgeStatus;
+    switch (order.status) {
+      case 'completed':
+        status = 'approved';
+        break;
+      case 'pending':
+        status = 'pending';
+        break;
+      case 'refunded':
+      case 'failed':
+        status = 'cancelled';
+        break;
+      default:
+        status = 'pending';
+    }
+
+    return {
+      id: order.id,
+      eventName: event?.title || 'Unknown Event',
+      eventImage: event?.image || '',
+      orderDate: formatOrderDate(order.createdAt),
+      ticketCount: orderTickets.length,
+      total: formatCurrency(order.totalAmount),
+      status,
+      totalCents: order.totalAmount,
+    };
+  });
+
+  // Filter based on active tab
+  const filteredOrders = orderData.filter((order) => {
     if (activeFilter === 'all') return true;
     return order.status === activeFilter;
   });
 
   const orderCounts = {
-    all: mockOrders.length,
-    approved: mockOrders.filter((o) => o.status === 'approved').length,
-    pending: mockOrders.filter((o) => o.status === 'pending').length,
-    cancelled: mockOrders.filter((o) => o.status === 'cancelled').length,
+    all: orderData.length,
+    approved: orderData.filter((o) => o.status === 'approved').length,
+    pending: orderData.filter((o) => o.status === 'pending').length,
+    cancelled: orderData.filter((o) => o.status === 'cancelled').length,
   };
 
-  const totalSpent = mockOrders
+  const totalSpent = orderData
     .filter((o) => o.status === 'approved')
-    .reduce((sum, o) => sum + parseFloat(o.total.replace('$', '')), 0)
-    .toFixed(2);
+    .reduce((sum, o) => sum + o.totalCents, 0);
+
+  const totalTicketsBought = orderData
+    .filter((o) => o.status === 'approved')
+    .reduce((sum, o) => sum + o.ticketCount, 0);
 
   return (
     <div className="pt-20">
@@ -98,7 +104,7 @@ export default function Orders() {
         <h1 className="font-display text-2xl font-semibold uppercase tracking-tight mb-2">Order History</h1>
         {/* Stats Subtitle */}
         <p className="text-gray-400 text-sm mb-6">
-          {orderCounts.all} orders • ${totalSpent} total spent
+          {orderCounts.all} orders • {formatCurrency(totalSpent)} total spent
         </p>
 
           {/* Filter Tabs */}
@@ -146,7 +152,7 @@ export default function Orders() {
                   : "You haven't made any purchases yet. Time to explore events!"}
               </p>
               <Link
-                to="/discovery"
+                to="/events"
                 className="inline-block bg-lime text-dark px-6 py-3 font-semibold uppercase text-sm tracking-wide hover:bg-limehover transition-colors"
               >
                 Explore Events
@@ -155,7 +161,7 @@ export default function Orders() {
           )}
 
           {/* Summary Stats */}
-          {mockOrders.length > 0 && (
+          {orderData.length > 0 && (
             <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-4">
               <div className="bg-surface border border-white/5 p-4 text-center">
                 <div className="text-2xl font-display font-semibold text-lime">
@@ -167,7 +173,7 @@ export default function Orders() {
               </div>
               <div className="bg-surface border border-white/5 p-4 text-center">
                 <div className="text-2xl font-display font-semibold text-white">
-                  ${totalSpent}
+                  {formatCurrency(totalSpent)}
                 </div>
                 <div className="text-xs text-gray-400 uppercase tracking-wide mt-1">
                   Total Spent
@@ -175,7 +181,7 @@ export default function Orders() {
               </div>
               <div className="bg-surface border border-white/5 p-4 text-center">
                 <div className="text-2xl font-display font-semibold text-white">
-                  {mockOrders.reduce((sum, o) => sum + o.ticketCount, 0)}
+                  {totalTicketsBought}
                 </div>
                 <div className="text-xs text-gray-400 uppercase tracking-wide mt-1">
                   Tickets Bought

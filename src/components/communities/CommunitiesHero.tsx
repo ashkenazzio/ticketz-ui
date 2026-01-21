@@ -1,50 +1,27 @@
-import { Search, MapPin, Music, Code, Dumbbell, Palette, Users, Sparkles, Heart } from 'lucide-react';
-import { useState } from 'react';
+import { Search, MapPin } from 'lucide-react';
+import { useState, useMemo } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { CATEGORIES_WITH_ALL } from '../../constants/categories';
+import { useData } from '../../context/DataContext';
 
 const BASE = import.meta.env.BASE_URL;
 
-const CATEGORIES = [
-  { id: 'all', label: 'All', icon: Sparkles },
-  { id: 'music', label: 'Music', icon: Music },
-  { id: 'tech', label: 'Tech', icon: Code },
-  { id: 'fitness', label: 'Fitness', icon: Dumbbell },
-  { id: 'creative', label: 'Creative', icon: Palette },
-  { id: 'social', label: 'Social', icon: Users },
-  { id: 'wellness', label: 'Wellness', icon: Heart },
-];
-
-const FEATURED_COMMUNITIES = [
-  {
-    id: '1',
-    name: 'Techno Bunker',
-    members: '2.4k',
-    image: `${BASE}event-images/techno-gathering.jpg`,
-  },
-  {
-    id: '2',
-    name: 'NYC Run Club',
-    members: '1.8k',
-    image: `${BASE}event-images/running-event.jpg`,
-  },
-  {
-    id: '3',
-    name: 'React Developers',
-    members: '3.2k',
-    image: `${BASE}event-images/tech-conference.jpg`,
-  },
-  {
-    id: '4',
-    name: 'Sunrise Yoga',
-    members: '890',
-    image: `${BASE}event-images/yoga-event.jpg`,
-  },
-];
-
 export default function CommunitiesHero() {
   const navigate = useNavigate();
+  const { db } = useData();
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('all');
+
+  // Get featured communities from database
+  const featuredCommunities = useMemo(() => {
+    const allCommunities = db.communities.getAll();
+    return allCommunities.slice(0, 4).map(community => ({
+      id: community.id,
+      name: community.name,
+      members: db.communities.getMemberCount(community.id).toLocaleString(),
+      image: community.coverImage || community.avatar,
+    }));
+  }, [db]);
 
   const handleSearch = () => {
     const params = new URLSearchParams();
@@ -122,7 +99,7 @@ export default function CommunitiesHero() {
 
         {/* Category Pills */}
         <div className="pt-2 flex flex-wrap justify-center gap-2">
-          {CATEGORIES.map((cat) => {
+          {CATEGORIES_WITH_ALL.map((cat) => {
             const Icon = cat.icon;
             const isActive = activeCategory === cat.id;
             return (
@@ -155,7 +132,7 @@ export default function CommunitiesHero() {
       {/* Featured Communities Grid */}
       <div className="w-full max-w-4xl mx-auto mt-10 sm:mt-14 px-4 relative z-10">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
-          {FEATURED_COMMUNITIES.map((community) => (
+          {featuredCommunities.map((community) => (
             <Link
               key={community.id}
               to={`/community/${community.id}`}

@@ -38,7 +38,7 @@ export default function NotFound() {
           Go Home
         </Link>
         <Link
-          to="/discovery"
+          to="/events"
           className="flex items-center gap-2 border border-white/30 text-white px-6 py-3 font-semibold uppercase text-sm tracking-wide hover:border-lime hover:text-lime transition-colors"
         >
           <Search className="w-4 h-4" />

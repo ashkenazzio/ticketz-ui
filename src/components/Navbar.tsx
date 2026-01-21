@@ -37,7 +37,7 @@ export default function Navbar() {
             <div className="hidden lg:flex items-center gap-8 text-sm font-medium text-gray-400">
               <Link to="/attendees" className="hover:text-white transition-colors">Attendees</Link>
               <Link to="/organizers" className="hover:text-white transition-colors">Organizers</Link>
-              <Link to="/discovery" className="hover:text-white transition-colors">Discovery</Link>
+              <Link to="/events" className="hover:text-white transition-colors">Events</Link>
               <Link to="/communities" className="hover:text-white transition-colors">Communities</Link>
               <Link to="/about" className="hover:text-white transition-colors">About</Link>
             </div>
@@ -45,7 +45,7 @@ export default function Navbar() {
 
           {isLoggedIn ? (
             <div className="flex items-center gap-6">
-              <Link to="/app" className="text-sm font-semibold text-lime hover:text-limehover transition-colors uppercase tracking-wide">
+              <Link to="/enter" className="text-sm font-semibold text-lime hover:text-limehover transition-colors uppercase tracking-wide">
                 Open App
               </Link>
               <Link
@@ -119,7 +119,7 @@ export default function Navbar() {
             </div>
           ) : (
             <div className="flex items-center gap-6">
-              <Link to="/app" className="text-sm font-semibold text-lime hover:text-limehover transition-colors uppercase tracking-wide">
+              <Link to="/enter" className="text-sm font-semibold text-lime hover:text-limehover transition-colors uppercase tracking-wide">
                 Open App
               </Link>
               <div className="w-px h-5 bg-white/10" />
@@ -206,7 +206,7 @@ export default function Navbar() {
                   Organizer Dashboard
                 </Link>
                 <Link
-                  to="/app"
+                  to="/enter"
                   className="text-white font-semibold py-3 px-4 rounded-sm bg-white/5 hover:bg-white/10 transition-colors flex justify-between items-center"
                   onClick={() => setIsMenuOpen(false)}
                 >
@@ -249,7 +249,7 @@ export default function Navbar() {
           {!isLoggedIn && (
             <div className="mb-6">
               <Link
-                to="/app"
+                to="/enter"
                 className="text-white font-semibold py-3 px-4 rounded-sm bg-white/5 hover:bg-white/10 transition-colors flex justify-between items-center"
                 onClick={() => setIsMenuOpen(false)}
               >
@@ -277,11 +277,11 @@ export default function Navbar() {
               Organizers
             </Link>
             <Link
-              to="/discovery"
+              to="/events"
               className="text-gray-300 font-medium py-3 px-4 rounded-sm hover:bg-white/5 hover:text-white transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
-              Discovery
+              Events
             </Link>
             <Link
               to="/communities"

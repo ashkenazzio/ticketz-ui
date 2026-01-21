@@ -29,7 +29,7 @@ export default function EventHighlight() {
                         Electric<br/>Garden
                     </h2>
 
-                    <Link to="/community/1" className="flex items-center gap-3 mb-8 group w-fit">
+                    <Link to="/community/comm-001" className="flex items-center gap-3 mb-8 group w-fit">
                         <div className="w-8 h-8 rounded-full overflow-hidden border border-white/10">
                             <img src="https://images.unsplash.com/photo-1598387993441-a364f854c3e1?q=80&w=100&auto=format&fit=crop" alt="Bass Sector" className="w-full h-full object-cover" />
                         </div>
@@ -64,7 +64,7 @@ export default function EventHighlight() {
                         <div className="text-xs sm:text-sm text-gray-400 uppercase tracking-wide">Starting from</div>
                         <div className="text-2xl sm:text-3xl font-display font-semibold text-white">$89.00</div>
                     </div>
-                    <Link to="/event/1" className="bg-lime text-dark font-display font-semibold uppercase tracking-tight px-6 sm:px-10 py-3 sm:py-4 rounded-sm hover:bg-limehover transition-colors flex items-center gap-2 w-full sm:w-auto justify-center text-sm sm:text-base">
+                    <Link to="/event/evt-001" className="bg-lime text-dark font-display font-semibold uppercase tracking-tight px-6 sm:px-10 py-3 sm:py-4 rounded-sm hover:bg-limehover transition-colors flex items-center gap-2 w-full sm:w-auto justify-center text-sm sm:text-base">
                         Get Tickets <ArrowUpRight className="w-4 h-4 sm:w-5 sm:h-5" />
                     </Link>
                 </div>

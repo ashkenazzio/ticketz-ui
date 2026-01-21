@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import ScrollToTop from './components/ScrollToTop';
 import { AuthProvider } from './context/AuthContext';
+import { DataProvider } from './context/DataContext';
 
 // Layouts
 import PublicLayout from './layouts/PublicLayout';
@@ -18,6 +19,8 @@ import Organizers from './pages/Organizers';
 // Auth Pages
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
+import ForgotPassword from './pages/auth/ForgotPassword';
+import ResetPassword from './pages/auth/ResetPassword';
 
 // App Pages (Attendee)
 import AppHub from './pages/AppHub';
@@ -31,9 +34,12 @@ import Orders from './pages/attendee/Orders';
 import OrderDetail from './pages/attendee/OrderDetail';
 import MyCommunities from './pages/attendee/MyCommunities';
 import SavedEvents from './pages/attendee/SavedEvents';
+import TicketDetail from './pages/attendee/TicketDetail';
+import Friends from './pages/attendee/Friends';
 
 // User Account Pages
 import UserProfile from './pages/UserProfile';
+import UserPublicProfile from './pages/UserPublicProfile';
 import Settings from './pages/Settings';
 
 // Organizer Pages
@@ -44,7 +50,13 @@ import EventManagement from './pages/organizer/EventManagement';
 import MemberManagement from './pages/organizer/MemberManagement';
 import GuestList from './pages/organizer/GuestList';
 import Analytics from './pages/organizer/Analytics';
-import Scanner from './pages/organizer/Scanner';
+import EventAnalytics from './pages/organizer/EventAnalytics';
+import CommunitySettings from './pages/organizer/CommunitySettings';
+import TeamManagement from './pages/organizer/TeamManagement';
+import CreateCommunity from './pages/organizer/CreateCommunity';
+
+// Splash / Transition Pages
+import AppSplash from './pages/AppSplash';
 
 // Error Pages
 import NotFound from './pages/NotFound';
@@ -52,13 +64,15 @@ import NotFound from './pages/NotFound';
 function App() {
   return (
     <AuthProvider>
-      <div className="bg-dark text-white min-h-screen">
+      <DataProvider>
+        <div className="bg-dark text-white min-h-screen">
         <ScrollToTop />
         <Routes>
           {/* Public routes with Navbar + Footer */}
           <Route element={<PublicLayout />}>
             <Route path="/" element={<LandingPage />} />
-            <Route path="/discovery" element={<Discovery />} />
+            <Route path="/events" element={<Discovery />} />
+            <Route path="/discovery" element={<Discovery />} /> {/* Legacy redirect */}
             <Route path="/communities" element={<Communities />} />
             <Route path="/about" element={<About />} />
             <Route path="/attendees" element={<Attendees />} />
@@ -68,6 +82,11 @@ function App() {
           {/* Auth routes (no layout - standalone pages) */}
           <Route path="/auth/login" element={<Login />} />
           <Route path="/auth/register" element={<Register />} />
+          <Route path="/auth/forgot-password" element={<ForgotPassword />} />
+          <Route path="/auth/reset-password" element={<ResetPassword />} />
+
+          {/* App splash/transition (no layout) */}
+          <Route path="/enter" element={<AppSplash />} />
 
           {/* App routes with AppHeader + AppFooter */}
           <Route element={<AppLayout />}>
@@ -82,6 +101,9 @@ function App() {
             <Route path="/orders/:id" element={<OrderDetail />} />
             <Route path="/my-communities" element={<MyCommunities />} />
             <Route path="/saved" element={<SavedEvents />} />
+            <Route path="/ticket/:id" element={<TicketDetail />} />
+            <Route path="/app/friends" element={<Friends />} />
+            <Route path="/user/:id" element={<UserPublicProfile />} />
             <Route path="/profile" element={<UserProfile />} />
             <Route path="/settings" element={<Settings />} />
           </Route>
@@ -93,15 +115,19 @@ function App() {
             <Route path="events/create" element={<CreateEvent />} />
             <Route path="events/:id/edit" element={<EditEvent />} />
             <Route path="events/:id/guests" element={<GuestList />} />
+            <Route path="events/:id/analytics" element={<EventAnalytics />} />
             <Route path="members" element={<MemberManagement />} />
+            <Route path="team" element={<TeamManagement />} />
             <Route path="analytics" element={<Analytics />} />
+            <Route path="community/settings" element={<CommunitySettings />} />
+            <Route path="community/new" element={<CreateCommunity />} />
           </Route>
-          <Route path="/scanner" element={<Scanner />} />
 
           {/* 404 Catch-all */}
           <Route path="*" element={<NotFound />} />
         </Routes>
-      </div>
+        </div>
+      </DataProvider>
     </AuthProvider>
   );
 }

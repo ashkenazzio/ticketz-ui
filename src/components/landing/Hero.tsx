@@ -42,13 +42,13 @@ export default function Hero() {
 
           <div className="flex flex-wrap gap-4 pt-4 justify-center md:justify-start">
             <Link
-              to="/app"
+              to="/enter"
               className="bg-lime text-dark font-bold text-lg px-8 py-4 rounded-sm hover:bg-limehover transition-all transform hover:-translate-y-1 hover:shadow-lg hover:shadow-lime/20 flex items-center gap-3"
             >
               Launch App <ArrowRight className="w-5 h-5" />
             </Link>
             <Link
-              to="/discovery"
+              to="/events"
               className="group bg-surface/80 backdrop-blur-sm border border-white/20 text-white font-medium text-lg px-8 py-4 rounded-sm hover:bg-surface hover:border-white/40 hover:-translate-y-1 hover:shadow-lg hover:shadow-white/5 transition-all flex items-center gap-3"
             >
               Explore Events

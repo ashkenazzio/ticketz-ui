@@ -1,175 +1,48 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import { Search as SearchIcon, MapPin, Calendar, Music, Code, Dumbbell, Palette, Users, Sparkles, Heart, Clock, ArrowLeft, X } from 'lucide-react';
+import { Search as SearchIcon, MapPin, Calendar, Users, Clock, X, CalendarRange } from 'lucide-react';
+import { CATEGORIES_WITH_ALL, getCategoryById } from '../../constants/categories';
+import { useData } from '../../context/DataContext';
 
-const BASE = import.meta.env.BASE_URL;
+// Helper to format dates
+function formatDate(isoString: string): string {
+  const date = new Date(isoString);
+  return date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+}
 
-const EVENT_CATEGORIES = [
-  { id: 'all', label: 'All', icon: Sparkles },
-  { id: 'music', label: 'Music', icon: Music },
-  { id: 'tech', label: 'Tech', icon: Code },
-  { id: 'fitness', label: 'Fitness', icon: Dumbbell },
-  { id: 'art', label: 'Art & Culture', icon: Palette },
-  { id: 'social', label: 'Social', icon: Users },
-];
+function formatTime(isoString: string): string {
+  const date = new Date(isoString);
+  return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+}
 
-const COMMUNITY_CATEGORIES = [
-  { id: 'all', label: 'All', icon: Sparkles },
-  { id: 'music', label: 'Music', icon: Music },
-  { id: 'tech', label: 'Tech', icon: Code },
-  { id: 'fitness', label: 'Fitness', icon: Dumbbell },
-  { id: 'creative', label: 'Creative', icon: Palette },
-  { id: 'social', label: 'Social', icon: Users },
-  { id: 'wellness', label: 'Wellness', icon: Heart },
-];
-
-const MOCK_EVENTS = [
-  {
-    id: '1',
-    title: 'Techno Bunker: Warehouse Vol. 4',
-    date: 'Sat, Jan 25',
-    time: '22:00',
-    location: 'Brooklyn, NY',
-    image: `${BASE}event-images/techno-gathering.jpg`,
-    category: 'music',
-    price: '$25',
-  },
-  {
-    id: '2',
-    title: 'React NYC January Meetup',
-    date: 'Thu, Jan 23',
-    time: '18:30',
-    location: 'Manhattan, NY',
-    image: `${BASE}event-images/tech-conference.jpg`,
-    category: 'tech',
-    price: 'Free',
-  },
-  {
-    id: '3',
-    title: 'Sunrise Yoga in the Park',
-    date: 'Sun, Jan 26',
-    time: '06:30',
-    location: 'Central Park, NY',
-    image: `${BASE}event-images/yoga-event.jpg`,
-    category: 'fitness',
-    price: '$15',
-  },
-  {
-    id: '4',
-    title: 'Underground Hip-Hop Showcase',
-    date: 'Fri, Jan 24',
-    time: '21:00',
-    location: 'Queens, NY',
-    image: `${BASE}event-images/hiphop-show.jpg`,
-    category: 'music',
-    price: '$20',
-  },
-  {
-    id: '5',
-    title: 'NYC Marathon Training Run',
-    date: 'Sat, Jan 25',
-    time: '07:00',
-    location: 'Prospect Park, NY',
-    image: `${BASE}event-images/running-event.jpg`,
-    category: 'fitness',
-    price: 'Free',
-  },
-  {
-    id: '6',
-    title: 'Gallery Opening: Modern Visions',
-    date: 'Thu, Jan 23',
-    time: '19:00',
-    location: 'Chelsea, NY',
-    image: `${BASE}event-images/gallery.jpg`,
-    category: 'art',
-    price: '$10',
-  },
-  {
-    id: '7',
-    title: 'Startup Founder Mixer',
-    date: 'Wed, Jan 22',
-    time: '18:00',
-    location: 'SoHo, NY',
-    image: `${BASE}event-images/startup-gathering.jpg`,
-    category: 'social',
-    price: 'Free',
-  },
-  {
-    id: '8',
-    title: 'Live Jazz & Vinyl Night',
-    date: 'Fri, Jan 24',
-    time: '20:00',
-    location: 'Harlem, NY',
-    image: `${BASE}event-images/music-records.jpg`,
-    category: 'music',
-    price: '$18',
-  },
-];
-
-const MOCK_COMMUNITIES = [
-  {
-    id: '1',
-    name: 'Techno Bunker',
-    members: '2.4k',
-    description: 'Underground electronic music collective',
-    image: `${BASE}event-images/techno-gathering.jpg`,
-    category: 'music',
-  },
-  {
-    id: '2',
-    name: 'NYC Run Club',
-    members: '1.8k',
-    description: 'Weekly group runs across the city',
-    image: `${BASE}event-images/running-event.jpg`,
-    category: 'fitness',
-  },
-  {
-    id: '3',
-    name: 'React Developers NYC',
-    members: '3.2k',
-    description: 'Frontend engineers and enthusiasts',
-    image: `${BASE}event-images/tech-conference.jpg`,
-    category: 'tech',
-  },
-  {
-    id: '4',
-    name: 'Sunrise Yoga Collective',
-    members: '890',
-    description: 'Morning yoga and mindfulness',
-    image: `${BASE}event-images/yoga-event.jpg`,
-    category: 'wellness',
-  },
-  {
-    id: '5',
-    name: 'Brooklyn Art House',
-    members: '1.1k',
-    description: 'Local artists and gallery lovers',
-    image: `${BASE}event-images/gallery-2.jpg`,
-    category: 'creative',
-  },
-  {
-    id: '6',
-    name: 'Founders Network NYC',
-    members: '2.1k',
-    description: 'Startup founders and investors',
-    image: `${BASE}event-images/startup-gathering.jpg`,
-    category: 'social',
-  },
-];
+function formatMemberCount(count: number): string {
+  if (count >= 1000) {
+    return (count / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
+  }
+  return count.toString();
+}
 
 export default function Search() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');
   const [activeTab, setActiveTab] = useState<'events' | 'communities'>(
-    (searchParams.get('type') as 'events' | 'communities') || 'events'
+    (searchParams.get('tab') as 'events' | 'communities') ||
+    (searchParams.get('type') as 'events' | 'communities') ||
+    'events'
   );
   const [activeCategory, setActiveCategory] = useState(searchParams.get('category') || 'all');
+
+  const { db } = useData();
+
+  // Get data from database
+  const allEvents = db.events.getAll();
+  const allCommunities = db.communities.getAll();
 
   // Update URL when filters change
   useEffect(() => {
     const params = new URLSearchParams();
     if (searchQuery) params.set('q', searchQuery);
-    params.set('type', activeTab);
+    params.set('tab', activeTab);
     if (activeCategory !== 'all') params.set('category', activeCategory);
     setSearchParams(params, { replace: true });
   }, [searchQuery, activeTab, activeCategory, setSearchParams]);
@@ -179,40 +52,34 @@ export default function Search() {
     setActiveCategory('all');
   }, [activeTab]);
 
-  const categories = activeTab === 'events' ? EVENT_CATEGORIES : COMMUNITY_CATEGORIES;
+  const categories = CATEGORIES_WITH_ALL;
 
-  // Filter results based on search and category
-  const filteredEvents = MOCK_EVENTS.filter((event) => {
+  // Filter events based on search and category
+  const filteredEvents = allEvents.filter((event) => {
     const matchesSearch = !searchQuery ||
       event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      event.location.toLowerCase().includes(searchQuery.toLowerCase());
+      (event.venueName && event.venueName.toLowerCase().includes(searchQuery.toLowerCase())) ||
+      (event.description && event.description.toLowerCase().includes(searchQuery.toLowerCase()));
     const matchesCategory = activeCategory === 'all' || event.category === activeCategory;
     return matchesSearch && matchesCategory;
   });
 
-  const filteredCommunities = MOCK_COMMUNITIES.filter((community) => {
+  // Filter communities based on search and category
+  const filteredCommunities = allCommunities.filter((community) => {
     const matchesSearch = !searchQuery ||
       community.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      community.description.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = activeCategory === 'all' || community.category === activeCategory;
+      (community.description && community.description.toLowerCase().includes(searchQuery.toLowerCase()));
+    const matchesCategory = activeCategory === 'all' ||
+      community.primaryCategory === activeCategory ||
+      community.secondaryCategory === activeCategory;
     return matchesSearch && matchesCategory;
   });
 
-  const results = activeTab === 'events' ? filteredEvents : filteredCommunities;
-  const resultsCount = results.length;
+  const resultsCount = activeTab === 'events' ? filteredEvents.length : filteredCommunities.length;
 
   return (
     <div className="pt-20 pb-12">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
-        {/* Back Link */}
-        <Link
-          to={activeTab === 'events' ? '/discovery' : '/communities'}
-          className="inline-flex items-center gap-2 text-gray-400 hover:text-white text-sm mb-6 transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Back to {activeTab === 'events' ? 'Discovery' : 'Communities'}
-        </Link>
-
         {/* Search Header */}
         <div className="space-y-4 mb-8">
           {/* Search Bar */}
@@ -237,7 +104,7 @@ export default function Search() {
             {/* Location */}
             <button className="flex items-center gap-2 px-4 py-3 bg-dark/50 rounded-md text-gray-400 hover:text-white hover:bg-dark transition-colors">
               <MapPin className="w-4 h-4" />
-              <span className="text-sm whitespace-nowrap">New York</span>
+              <span className="text-sm whitespace-nowrap">All Locations</span>
             </button>
 
             {/* Date - only for events */}
@@ -315,65 +182,93 @@ export default function Search() {
           </div>
         ) : activeTab === 'events' ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {filteredEvents.map((event) => (
-              <Link
-                key={event.id}
-                to={`/event/${event.id}`}
-                className="group bg-surface border border-white/5 rounded-lg overflow-hidden hover:border-white/20 transition-all"
-              >
-                <div className="aspect-[4/3] overflow-hidden">
-                  <img
-                    src={event.image}
-                    alt={event.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                </div>
-                <div className="p-4">
-                  <div className="flex items-center gap-2 text-xs text-gray-500 mb-2">
-                    <Clock className="w-3 h-3" />
-                    <span>{event.date} • {event.time}</span>
+            {filteredEvents.map((event) => {
+              const isMultiDay = db.events.isMultiDay(event);
+              const lowestTier = db.ticketTiers.getByEvent(event.id).sort((a, b) => a.price - b.price)[0];
+              const price = lowestTier ? `$${(lowestTier.price / 100).toFixed(0)}` : 'Free';
+
+              return (
+                <Link
+                  key={event.id}
+                  to={`/event/${event.id}`}
+                  className="group bg-surface border border-white/5 rounded-lg overflow-hidden hover:border-white/20 transition-all"
+                >
+                  <div className="aspect-[4/3] overflow-hidden relative">
+                    <img
+                      src={event.image || event.coverImage || 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=400'}
+                      alt={event.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                    {isMultiDay && (
+                      <span className="absolute top-2 right-2 bg-purple-500/80 backdrop-blur-sm text-white text-[10px] font-semibold px-2 py-1 flex items-center gap-1">
+                        <CalendarRange className="w-3 h-3" />
+                        Multi-Day
+                      </span>
+                    )}
                   </div>
-                  <h3 className="font-medium text-white text-sm mb-1 line-clamp-2 group-hover:text-lime transition-colors">
-                    {event.title}
-                  </h3>
-                  <div className="flex items-center gap-1 text-xs text-gray-500 mb-3">
-                    <MapPin className="w-3 h-3" />
-                    <span>{event.location}</span>
+                  <div className="p-4">
+                    <div className="flex items-center gap-2 text-xs text-gray-500 mb-2">
+                      <Clock className="w-3 h-3" />
+                      <span>
+                        {formatDate(event.startTime)}
+                        {isMultiDay && ` → ${formatDate(event.endTime)}`}
+                        {!isMultiDay && ` • ${formatTime(event.startTime)}`}
+                      </span>
+                    </div>
+                    <h3 className="font-medium text-white text-sm mb-1 line-clamp-2 group-hover:text-lime transition-colors">
+                      {event.title}
+                    </h3>
+                    <div className="flex items-center gap-1 text-xs text-gray-500 mb-3">
+                      <MapPin className="w-3 h-3" />
+                      <span>{event.venueName || 'Venue TBA'}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-lime font-bold text-sm">{price}</span>
+                    </div>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-lime font-bold text-sm">{event.price}</span>
-                  </div>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              );
+            })}
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredCommunities.map((community) => (
-              <Link
-                key={community.id}
-                to={`/community/${community.id}`}
-                className="group bg-surface border border-white/5 rounded-lg overflow-hidden hover:border-white/20 transition-all flex"
-              >
-                <div className="w-24 h-24 flex-shrink-0 overflow-hidden">
-                  <img
-                    src={community.image}
-                    alt={community.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                </div>
-                <div className="p-4 flex-1 min-w-0">
-                  <h3 className="font-medium text-white text-sm mb-1 truncate group-hover:text-lime transition-colors">
-                    {community.name}
-                  </h3>
-                  <p className="text-xs text-gray-500 mb-2 line-clamp-2">{community.description}</p>
-                  <div className="flex items-center gap-1 text-xs text-gray-400">
-                    <Users className="w-3 h-3" />
-                    <span>{community.members} members</span>
+            {filteredCommunities.map((community) => {
+              const memberCount = db.communities.getMemberCount(community.id);
+              const primaryCat = getCategoryById(community.primaryCategory);
+
+              return (
+                <Link
+                  key={community.id}
+                  to={`/community/${community.id}`}
+                  className="group bg-surface border border-white/5 rounded-lg overflow-hidden hover:border-white/20 transition-all flex"
+                >
+                  <div className="w-24 h-24 flex-shrink-0 overflow-hidden">
+                    <img
+                      src={community.avatar || 'https://images.unsplash.com/photo-1598387993441-a364f854c3e1?q=80&w=200'}
+                      alt={community.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
                   </div>
-                </div>
-              </Link>
-            ))}
+                  <div className="p-4 flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <h3 className="font-medium text-white text-sm truncate group-hover:text-lime transition-colors">
+                        {community.name}
+                      </h3>
+                      {primaryCat && (
+                        <span className="text-[10px] text-gray-500 bg-white/5 px-1.5 py-0.5 rounded">
+                          {primaryCat.label}
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-xs text-gray-500 mb-2 line-clamp-2">{community.description}</p>
+                    <div className="flex items-center gap-1 text-xs text-gray-400">
+                      <Users className="w-3 h-3" />
+                      <span>{formatMemberCount(memberCount)} members</span>
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         )}
       </div>

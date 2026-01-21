@@ -53,7 +53,7 @@ export default function Login() {
                     <div>
                         <div className="flex justify-between items-center mb-2">
                              <label className="block text-xs uppercase text-gray-500 font-bold tracking-wide">Password</label>
-                             <a href="#" className="text-xs text-lime hover:underline">Forgot?</a>
+                             <Link to="/auth/forgot-password" className="text-xs text-lime hover:underline">Forgot?</Link>
                         </div>
                         <input type="password" className="w-full bg-dark border border-white/10 rounded-sm p-4 text-white placeholder-gray-600 focus:outline-none focus:border-lime transition-colors" placeholder="••••••••" />
                     </div>

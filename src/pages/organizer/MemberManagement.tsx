@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Search, Users, MoreVertical, Shield, Crown, UserMinus, Mail, Calendar, Ticket } from 'lucide-react';
+import { Search, Users, MoreVertical, Shield, Crown, UserMinus, Mail, Calendar, Ticket, Download } from 'lucide-react';
+import { exportToCSV } from '../../utils/csv';
 
 type MemberRole = 'admin' | 'moderator' | 'member';
 
@@ -101,6 +102,17 @@ export default function MemberManagement() {
     member: members.filter(m => m.role === 'member').length,
   };
 
+  const handleExportCSV = () => {
+    exportToCSV(filteredMembers, [
+      { header: 'Name', accessor: 'name' },
+      { header: 'Email', accessor: 'email' },
+      { header: 'Role', accessor: 'role' },
+      { header: 'Joined', accessor: 'joinDate' },
+      { header: 'Events Attended', accessor: 'eventsAttended' },
+      { header: 'Tickets Bought', accessor: 'ticketsBought' },
+    ], `members-${new Date().toISOString().split('T')[0]}`);
+  };
+
   return (
     <>
       {/* Header */}
@@ -113,10 +125,19 @@ export default function MemberManagement() {
             {members.length} total members • {roleCounts.admin + roleCounts.moderator} with elevated access
           </p>
         </div>
-        <button className="flex items-center justify-center gap-2 border border-white/20 text-white px-5 py-3 font-semibold uppercase text-sm tracking-wide hover:border-lime hover:text-lime transition-colors">
-          <Mail className="w-4 h-4" />
-          Email All
-        </button>
+        <div className="flex gap-2">
+          <button className="flex items-center justify-center gap-2 border border-white/20 text-white px-5 py-3 font-semibold uppercase text-sm tracking-wide hover:border-lime hover:text-lime transition-colors">
+            <Mail className="w-4 h-4" />
+            Email All
+          </button>
+          <button
+            onClick={handleExportCSV}
+            className="flex items-center justify-center gap-2 bg-lime text-dark px-5 py-3 font-semibold uppercase text-sm tracking-wide hover:bg-limehover transition-colors"
+          >
+            <Download className="w-4 h-4" />
+            Export CSV
+          </button>
+        </div>
       </div>
 
       {/* Search and Filter */}

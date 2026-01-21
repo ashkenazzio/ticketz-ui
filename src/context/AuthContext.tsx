@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect, ReactNode } from 'react
 
 interface AuthContextType {
   isLoggedIn: boolean;
+  isAuthenticated: boolean; // Alias for isLoggedIn
   user: {
     name: string;
     email: string;
@@ -31,9 +32,9 @@ const STORAGE_KEY = 'ticketz_logged_in';
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    // Check localStorage on init, default to true for demo
+    // Check localStorage on init, default to false (logged out)
     const stored = localStorage.getItem(STORAGE_KEY);
-    return stored === null ? true : stored === 'true';
+    return stored === 'true';
   });
 
   const user = isLoggedIn ? mockUser : null;
@@ -51,7 +52,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, user, login, logout }}>
+    <AuthContext.Provider value={{ isLoggedIn, isAuthenticated: isLoggedIn, user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

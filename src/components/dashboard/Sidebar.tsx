@@ -1,12 +1,40 @@
-import { LayoutDashboard, Calendar, Users, BarChart3, Settings, LogOut, X } from 'lucide-react';
+import { useState } from 'react';
+import { LayoutDashboard, Calendar, Users, BarChart3, Settings, LogOut, X, Shield, Plus } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
+import CommunityPicker, { type Community } from './CommunityPicker';
 
 const navItems = [
     { name: 'Overview', icon: LayoutDashboard, path: '/dashboard' },
     { name: 'Events', icon: Calendar, path: '/dashboard/events' },
     { name: 'Members', icon: Users, path: '/dashboard/members' },
+    { name: 'Team', icon: Shield, path: '/dashboard/team' },
     { name: 'Analytics', icon: BarChart3, path: '/dashboard/analytics' },
-    { name: 'Settings', icon: Settings, path: '/settings' },
+    { name: 'Settings', icon: Settings, path: '/dashboard/community/settings' },
+];
+
+// Mock communities the user manages
+const mockCommunities: Community[] = [
+    {
+        id: '1',
+        name: 'Bass Sector',
+        avatar: 'https://images.unsplash.com/photo-1598387993441-a364f854c3e1?w=100&q=80',
+        memberCount: 2500,
+        role: 'owner',
+    },
+    {
+        id: '2',
+        name: 'Warehouse Collective',
+        avatar: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=100&q=80',
+        memberCount: 850,
+        role: 'admin',
+    },
+    {
+        id: '3',
+        name: 'NYC Underground',
+        avatar: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=100&q=80',
+        memberCount: 1200,
+        role: 'moderator',
+    },
 ];
 
 interface SidebarProps {
@@ -16,6 +44,7 @@ interface SidebarProps {
 
 export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
     const location = useLocation();
+    const [selectedCommunityId, setSelectedCommunityId] = useState(mockCommunities[0].id);
 
     return (
         <>
@@ -35,8 +64,8 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
                 ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
             `}>
                 <div className="p-6">
-                    <div className="flex items-center justify-between mb-8">
-                        <Link to="/" className="font-sans text-2xl font-bold tracking-tight text-white block">
+                    <div className="flex items-center justify-between mb-6">
+                        <Link to="/dashboard" className="font-sans text-2xl font-bold tracking-tight text-white block">
                             ticketz<span className="text-lime">.</span>
                         </Link>
                         {/* Close button for mobile */}
@@ -47,6 +76,15 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
                         >
                             <X className="w-5 h-5" />
                         </button>
+                    </div>
+
+                    {/* Community Picker */}
+                    <div className="mb-6">
+                        <CommunityPicker
+                            communities={mockCommunities}
+                            selectedId={selectedCommunityId}
+                            onSelect={setSelectedCommunityId}
+                        />
                     </div>
 
                     <nav className="space-y-1">
@@ -71,11 +109,23 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
                     </nav>
                 </div>
 
-                <div className="mt-auto p-4 border-t border-white/5">
-                    <button className="flex items-center gap-3 w-full px-4 py-3 text-gray-400 hover:text-white hover:bg-white/5 rounded-sm transition-colors">
+                <div className="mt-auto p-4 border-t border-white/5 space-y-2">
+                    <Link
+                        to="/dashboard/community/new"
+                        onClick={onClose}
+                        className="flex items-center gap-3 w-full px-4 py-3 text-lime hover:text-limehover hover:bg-lime/5 rounded-sm transition-colors"
+                    >
+                        <Plus className="w-5 h-5" />
+                        <span className="font-medium text-sm">New Community</span>
+                    </Link>
+                    <Link
+                        to="/app"
+                        onClick={onClose}
+                        className="flex items-center gap-3 w-full px-4 py-3 text-gray-400 hover:text-white hover:bg-white/5 rounded-sm transition-colors"
+                    >
                         <LogOut className="w-5 h-5" />
-                        <span className="font-medium text-sm">Log Out</span>
-                    </button>
+                        <span className="font-medium text-sm">Exit Dashboard</span>
+                    </Link>
                 </div>
             </aside>
         </>

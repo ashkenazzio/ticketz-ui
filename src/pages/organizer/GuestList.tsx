@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import { ArrowLeft, Search, Download, Mail, Check, X, QrCode, Filter } from 'lucide-react';
 import type { BadgeStatus } from '../../components/StatusBadge';
 import StatusBadge from '../../components/StatusBadge';
+import { exportToCSV } from '../../utils/csv';
 
 interface Guest {
   id: string;
@@ -47,6 +48,18 @@ export default function GuestList() {
     vip: guests.filter(g => g.tier === 'VIP').length,
   };
 
+  const handleExportCSV = () => {
+    exportToCSV(filteredGuests, [
+      { header: 'Name', accessor: 'name' },
+      { header: 'Email', accessor: 'email' },
+      { header: 'Ticket ID', accessor: 'ticketId' },
+      { header: 'Tier', accessor: 'tier' },
+      { header: 'Purchase Date', accessor: 'purchaseDate' },
+      { header: 'Status', accessor: 'status' },
+      { header: 'Checked In', accessor: (g) => g.checkedIn ? 'Yes' : 'No' },
+    ], `guest-list-electric-garden-${new Date().toISOString().split('T')[0]}`);
+  };
+
   return (
     <>
       {/* Header */}
@@ -72,7 +85,10 @@ export default function GuestList() {
               <Mail className="w-4 h-4" />
               Email All
             </button>
-            <button className="flex items-center gap-2 bg-lime text-dark px-4 py-2 text-sm font-semibold uppercase tracking-wide hover:bg-limehover transition-colors">
+            <button
+              onClick={handleExportCSV}
+              className="flex items-center gap-2 bg-lime text-dark px-4 py-2 text-sm font-semibold uppercase tracking-wide hover:bg-limehover transition-colors"
+            >
               <Download className="w-4 h-4" />
               Export CSV
             </button>

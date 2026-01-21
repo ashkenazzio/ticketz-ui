@@ -21,7 +21,7 @@ export default function Checkout() {
             
             {/* Header */}
             <div className="bg-dark/50 p-6 border-b border-white/5 flex items-center justify-between">
-                <Link to="/event/1" className="text-gray-400 hover:text-white transition-colors">
+                <Link to="/event/evt-001" className="text-gray-400 hover:text-white transition-colors">
                     <ArrowLeft className="w-5 h-5" />
                 </Link>
                 <div className="font-display font-semibold uppercase tracking-tight">Checkout</div>

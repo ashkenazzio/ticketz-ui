@@ -1,125 +1,462 @@
-import { Link } from 'react-router-dom';
-import { Calendar, MapPin, Clock, Share2, ArrowLeft } from 'lucide-react';
+import { useState } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Calendar, MapPin, Clock, Share2, ArrowLeft, Users, Bookmark, CalendarRange, ChevronLeft, ChevronRight, X, Images } from 'lucide-react';
+import MessageBoard from '../../components/MessageBoard';
+import MembersModal from '../../components/MembersModal';
+import AuthPromptModal from '../../components/AuthPromptModal';
+import { useAuthPrompt } from '../../hooks/useAuthPrompt';
+import { type FriendStatus, type MemberRole } from '../../components/MemberCard';
+import { useEvent, useEventAttendees, useIsSaved, useData } from '../../context/DataContext';
+import { getCategoryById } from '../../constants/categories';
 
-const artists = [
-    { name: "Bonobo", img: "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=200&q=80" },
-    { name: "Four Tet", img: "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?auto=format&fit=crop&w=200&q=80" },
-    { name: "Floating Points", img: "https://images.unsplash.com/photo-1542909168-82c3e7fdca5c?auto=format&fit=crop&w=200&q=80" },
-    { name: "Caribou", img: "https://images.unsplash.com/photo-1542596594-649edbc13630?auto=format&fit=crop&w=200&q=80" },
-    { name: "Jon Hopkins", img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=200&q=80" },
-    { name: "Bicep", img: "https://images.unsplash.com/photo-1531384441138-2736e62e0919?auto=format&fit=crop&w=200&q=80" },
-];
+// Helper to format dates
+function formatDate(isoString: string): string {
+  const date = new Date(isoString);
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+function formatTime(isoString: string): string {
+  const date = new Date(isoString);
+  return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+}
 
 export default function EventDetails() {
-  return (
-    <div className="flex flex-col lg:flex-row min-h-screen">
-        
-        {/* Left: Poster / Immersive Visual */}
-        <div className="lg:w-1/2 h-[50vh] lg:h-[calc(100vh-80px)] relative lg:fixed lg:left-0 lg:top-20 z-0">
-            <img src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=2070&auto=format&fit=crop" className="w-full h-full object-cover" alt="Event Poster" />
-            <div className="absolute inset-0 bg-gradient-to-t from-dark to-transparent opacity-90 lg:opacity-40"></div>
-            
-            <Link to="/" className="absolute top-6 left-6 z-20 w-10 h-10 bg-dark/50 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white hover:text-dark transition-colors border border-white/10">
-                <ArrowLeft className="w-5 h-5" />
-            </Link>
-        </div>
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [showAttendeesModal, setShowAttendeesModal] = useState(false);
+  const [showGalleryModal, setShowGalleryModal] = useState(false);
+  const [galleryIndex, setGalleryIndex] = useState(0);
+  const { showPrompt, promptReason, closePrompt, requireAuth } = useAuthPrompt();
+  const { db, currentUser } = useData();
 
-        {/* Spacer for Desktop fixed left side */}
-        <div className="hidden lg:block lg:w-1/2"></div>
+  // Get event data from database
+  const eventData = useEvent(id);
+  const { attendees, friendsGoing, totalCount } = useEventAttendees(id);
+  const { isSaved, toggle: toggleSave } = useIsSaved(id);
 
-        {/* Right: Scrollable Details */}
-        <div className="lg:w-1/2 relative z-10 bg-dark">
-            <div className="p-6 md:p-12 pb-32">
-                
-                {/* Meta */}
-                <div className="flex items-center gap-3 mb-6">
-                    <span className="bg-lime/10 text-lime px-3 py-1 rounded-sm text-xs font-semibold uppercase tracking-wider border border-lime/20">Music Festival</span>
-                    <button className="ml-auto text-gray-400 hover:text-white transition-colors"><Share2 className="w-5 h-5" /></button>
-                </div>
-
-                <h1 className="font-display text-5xl md:text-7xl font-semibold uppercase tracking-tighter leading-[0.9] mb-6">
-                    Electric<br/>Garden
-                </h1>
-
-                {/* Hosted By Community */}
-                <Link to="/community/1" className="flex items-center gap-4 mb-8 p-4 bg-surface border border-white/10 rounded-sm hover:border-lime/30 transition-colors group">
-                    <div className="w-14 h-14 rounded-sm overflow-hidden border border-white/10">
-                        <img src="https://images.unsplash.com/photo-1598387993441-a364f854c3e1?q=80&w=200&auto=format&fit=crop" alt="Bass Sector" className="w-full h-full object-cover" />
-                    </div>
-                    <div className="flex-1">
-                        <div className="text-xs text-gray-500 uppercase tracking-wider mb-1">Hosted by</div>
-                        <div className="font-display text-xl font-semibold uppercase tracking-tight text-white group-hover:text-lime transition-colors">Bass Sector</div>
-                    </div>
-                    <div className="text-gray-500 group-hover:text-lime transition-colors">
-                        <ArrowLeft className="w-5 h-5 rotate-180" />
-                    </div>
-                </Link>
-
-                {/* Key Info Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12 border-y border-white/10 py-8">
-                    <div className="flex gap-4">
-                        <div className="w-12 h-12 flex items-center justify-center bg-surface border border-white/10 rounded-sm">
-                            <Calendar className="w-5 h-5 text-lime" />
-                        </div>
-                        <div>
-                            <div className="text-sm font-semibold text-white uppercase">Date</div>
-                            <div className="text-sm text-gray-400">Nov 12 - 14, 2026</div>
-                        </div>
-                    </div>
-                    <div className="flex gap-4">
-                        <div className="w-12 h-12 flex items-center justify-center bg-surface border border-white/10 rounded-sm">
-                            <Clock className="w-5 h-5 text-lime" />
-                        </div>
-                        <div>
-                            <div className="text-sm font-semibold text-white uppercase">Time</div>
-                            <div className="text-sm text-gray-400">12:00 PM - 11:00 PM</div>
-                        </div>
-                    </div>
-                    <div className="flex gap-4 md:col-span-2">
-                        <div className="w-12 h-12 flex items-center justify-center bg-surface border border-white/10 rounded-sm">
-                            <MapPin className="w-5 h-5 text-lime" />
-                        </div>
-                        <div>
-                            <div className="text-sm font-semibold text-white uppercase">The Conservatory</div>
-                            <div className="text-sm text-gray-400">1200 Flower District Blvd, City Center</div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Description */}
-                <div className="mb-12">
-                    <h3 className="font-display text-2xl font-semibold uppercase tracking-tight mb-4">About</h3>
-                    <p className="text-gray-400 leading-relaxed text-lg">
-                        Immerse yourself in a botanical auditory experience. Electric Garden transforms the city's historic conservatory into a 3-day electronic music haven. Featuring state-of-the-art projection mapping on organic structures.
-                    </p>
-                </div>
-
-                {/* Lineup */}
-                <div className="mb-12">
-                    <h3 className="font-display text-2xl font-semibold uppercase tracking-tight mb-6">Lineup</h3>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                        {artists.map((artist, idx) => (
-                            <div key={idx} className="group relative aspect-square overflow-hidden rounded-sm bg-surface">
-                                <img src={artist.img} alt={artist.name} className="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-300" />
-                                <div className="absolute inset-0 bg-gradient-to-t from-dark/90 to-transparent"></div>
-                                <div className="absolute bottom-3 left-3 font-display font-medium text-white tracking-wide uppercase">{artist.name}</div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </div>
-
-            {/* Sticky Bottom Bar */}
-            <div className="fixed bottom-0 right-0 w-full lg:w-1/2 bg-surface border-t border-white/10 p-4 sm:p-6 flex items-center justify-between z-50">
-                <div>
-                    <div className="text-xs text-gray-500 uppercase tracking-widest mb-1">Total Price</div>
-                    <div className="text-3xl font-display font-semibold text-white">$89.00</div>
-                </div>
-                <Link to="/checkout" className="bg-lime text-dark font-display font-semibold uppercase tracking-tight px-6 sm:px-10 py-3 sm:py-4 rounded-sm hover:bg-limehover transition-colors text-sm sm:text-base">
-                    Buy Tickets
-                </Link>
-            </div>
+  // Handle missing event
+  if (!eventData) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="font-display text-3xl font-semibold uppercase tracking-tight mb-4">Event Not Found</h1>
+          <p className="text-gray-400 mb-6">The event you're looking for doesn't exist.</p>
+          <Link to="/app/search" className="text-lime hover:text-limehover">Browse Events</Link>
         </div>
       </div>
+    );
+  }
+
+  const { event, community, ticketTiers, isMultiDay } = eventData;
+  const category = getCategoryById(event.category);
+  const lowestPrice = ticketTiers.length > 0
+    ? Math.min(...ticketTiers.map(t => t.price)) / 100
+    : 0;
+
+  // Transform attendees to match MemberCard format
+  const attendeesForModal = attendees.map(user => {
+    const connection = currentUser ? db.connections.getStatus(currentUser.id, user.id) : undefined;
+    const mutualFriends = currentUser ? db.connections.getMutualFriends(currentUser.id, user.id).length : 0;
+    let friendStatus: FriendStatus = 'none';
+    if (connection) {
+      if (connection.status === 'accepted') friendStatus = 'friends';
+      else if (connection.status === 'pending') friendStatus = 'pending';
+    }
+    return {
+      id: user.id,
+      name: user.name,
+      avatar: user.avatar || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&q=80',
+      role: 'member' as MemberRole,
+      mutualFriends,
+      friendStatus,
+    };
+  });
+
+  const previewAttendees = attendeesForModal.slice(0, 4);
+
+  const handleAddFriend = (userId: string) => {
+    requireAuth(() => {
+      console.log('Add friend:', userId);
+    }, 'add_friend');
+  };
+
+  const handleBuyTickets = () => {
+    requireAuth(() => {
+      navigate(`/checkout?event=${id}`);
+    }, 'purchase');
+  };
+
+  const handleSaveEvent = () => {
+    requireAuth(() => {
+      toggleSave();
+    }, 'save_event');
+  };
+
+  const handleBack = () => {
+    navigate('/app/search');
+  };
+
+  return (
+    <div className="flex flex-col lg:flex-row min-h-screen">
+      {/* Left: Poster / Immersive Visual */}
+      <div className="lg:w-1/2 h-[50vh] lg:h-[calc(100vh-80px)] relative lg:fixed lg:left-0 lg:top-20 z-0">
+        <img
+          src={event.coverImage || event.image || 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=2070&auto=format&fit=crop'}
+          className="w-full h-full object-cover"
+          alt={event.title}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-dark to-transparent opacity-90 lg:opacity-40"></div>
+
+        <button
+          onClick={handleBack}
+          className="absolute top-6 left-6 z-20 w-10 h-10 bg-dark/50 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white hover:text-dark transition-colors border border-white/10"
+        >
+          <ArrowLeft className="w-5 h-5" />
+        </button>
+      </div>
+
+      {/* Spacer for Desktop fixed left side */}
+      <div className="hidden lg:block lg:w-1/2"></div>
+
+      {/* Right: Scrollable Details */}
+      <div className="lg:w-1/2 relative z-10 bg-dark">
+        <div className="p-6 md:p-12 pb-32">
+
+          {/* Meta */}
+          <div className="flex items-center gap-3 mb-6">
+            {category && (
+              <span className="bg-lime/10 text-lime px-3 py-1 rounded-sm text-xs font-semibold uppercase tracking-wider border border-lime/20">
+                {category.label}
+              </span>
+            )}
+            {isMultiDay && (
+              <span className="bg-purple-400/10 text-purple-400 px-3 py-1 rounded-sm text-xs font-semibold uppercase tracking-wider border border-purple-400/20">
+                Multi-Day
+              </span>
+            )}
+            <div className="ml-auto flex items-center gap-2">
+              <button
+                onClick={handleSaveEvent}
+                className={`p-2 transition-colors ${
+                  isSaved
+                    ? 'text-lime bg-lime/10 border border-lime/20'
+                    : 'text-gray-400 hover:text-white'
+                }`}
+                title={isSaved ? 'Remove from saved' : 'Save event'}
+              >
+                <Bookmark className={`w-5 h-5 ${isSaved ? 'fill-lime' : ''}`} />
+              </button>
+              <button className="p-2 text-gray-400 hover:text-white transition-colors">
+                <Share2 className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+
+          <h1 className="font-display text-5xl md:text-7xl font-semibold uppercase tracking-tighter leading-[0.9] mb-6">
+            {event.title.split(' ').map((word, i) => (
+              <span key={i}>{word}{i < event.title.split(' ').length - 1 && <br />}</span>
+            ))}
+          </h1>
+
+          {/* Hosted By Community */}
+          {community && (
+            <Link
+              to={`/community/${community.id}`}
+              className="flex items-center gap-4 mb-8 p-4 bg-surface border border-white/10 rounded-sm hover:border-lime/30 transition-colors group"
+            >
+              <div className="w-14 h-14 rounded-sm overflow-hidden border border-white/10">
+                <img
+                  src={community.avatar || 'https://images.unsplash.com/photo-1598387993441-a364f854c3e1?q=80&w=200&auto=format&fit=crop'}
+                  alt={community.name}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="flex-1">
+                <div className="text-xs text-gray-500 uppercase tracking-wider mb-1">Hosted by</div>
+                <div className="font-display text-xl font-semibold uppercase tracking-tight text-white group-hover:text-lime transition-colors">
+                  {community.name}
+                </div>
+              </div>
+              <div className="text-gray-500 group-hover:text-lime transition-colors">
+                <ArrowLeft className="w-5 h-5 rotate-180" />
+              </div>
+            </Link>
+          )}
+
+          {/* Key Info Grid - Start/End Time Display */}
+          <div className="mb-12 border-y border-white/10 py-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Start Time Block */}
+              <div className="bg-surface/50 border border-white/5 p-4 rounded-sm">
+                <div className="flex items-center gap-2 mb-3">
+                  {isMultiDay ? (
+                    <CalendarRange className="w-5 h-5 text-lime" />
+                  ) : (
+                    <Calendar className="w-5 h-5 text-lime" />
+                  )}
+                  <span className="text-xs text-gray-500 uppercase tracking-wide font-semibold">
+                    {isMultiDay ? 'Start' : 'Date & Time'}
+                  </span>
+                </div>
+                <div className="text-lg font-semibold text-white">
+                  {formatDate(event.startTime)}
+                </div>
+                <div className="text-sm text-gray-400 flex items-center gap-2 mt-1">
+                  <Clock className="w-4 h-4" />
+                  {formatTime(event.startTime)}
+                </div>
+              </div>
+
+              {/* End Time Block - Only for multi-day or if end time is different day */}
+              {isMultiDay ? (
+                <div className="bg-surface/50 border border-white/5 p-4 rounded-sm">
+                  <div className="flex items-center gap-2 mb-3">
+                    <CalendarRange className="w-5 h-5 text-purple-400" />
+                    <span className="text-xs text-gray-500 uppercase tracking-wide font-semibold">End</span>
+                  </div>
+                  <div className="text-lg font-semibold text-white">
+                    {formatDate(event.endTime)}
+                  </div>
+                  <div className="text-sm text-gray-400 flex items-center gap-2 mt-1">
+                    <Clock className="w-4 h-4" />
+                    {formatTime(event.endTime)}
+                  </div>
+                </div>
+              ) : (
+                <div className="bg-surface/50 border border-white/5 p-4 rounded-sm">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Clock className="w-5 h-5 text-lime" />
+                    <span className="text-xs text-gray-500 uppercase tracking-wide font-semibold">Ends At</span>
+                  </div>
+                  <div className="text-lg font-semibold text-white">
+                    {formatTime(event.endTime)}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Venue - Full Width */}
+            <div className="mt-4 bg-surface/50 border border-white/5 p-4 rounded-sm">
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 flex items-center justify-center bg-lime/10 rounded-sm flex-shrink-0">
+                  <MapPin className="w-5 h-5 text-lime" />
+                </div>
+                <div>
+                  <div className="text-lg font-semibold text-white">
+                    {event.venueName || 'Venue TBA'}
+                  </div>
+                  {event.venueAddress && (
+                    <div className="text-sm text-gray-400 mt-1">{event.venueAddress}</div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Description */}
+          {event.description && (
+            <div className="mb-12">
+              <h3 className="font-display text-2xl font-semibold uppercase tracking-tight mb-4">About</h3>
+              <p className="text-gray-400 leading-relaxed text-lg">
+                {event.description}
+              </p>
+            </div>
+          )}
+
+          {/* Event Gallery - Show if gallery images exist */}
+          {event.galleryImages && event.galleryImages.length > 0 && (
+            <div className="mb-12">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="font-display text-2xl font-semibold uppercase tracking-tight flex items-center gap-3">
+                  <Images className="w-6 h-6 text-lime" />
+                  Gallery
+                </h3>
+                <span className="text-sm text-gray-500">{event.galleryImages.length} photos</span>
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                {event.galleryImages.slice(0, 6).map((img, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => {
+                      setGalleryIndex(idx);
+                      setShowGalleryModal(true);
+                    }}
+                    className="group relative aspect-square overflow-hidden rounded-sm bg-surface focus:outline-none focus:ring-2 focus:ring-lime"
+                  >
+                    <img src={img} alt={`Event photo ${idx + 1}`} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-300" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-dark/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Who's Going Section - Compact Preview */}
+          <div className="mb-12">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-display text-2xl font-semibold uppercase tracking-tight">
+                Who's Going
+              </h3>
+              <button
+                onClick={() => setShowAttendeesModal(true)}
+                className="text-sm text-lime hover:text-limehover transition-colors"
+              >
+                View All
+              </button>
+            </div>
+
+            {/* Friends Going Highlight */}
+            {friendsGoing.length > 0 && (
+              <div className="bg-lime/5 border border-lime/20 p-4 mb-4">
+                <div className="flex items-center gap-3">
+                  <div className="flex -space-x-2">
+                    {friendsGoing.slice(0, 3).map((friend) => (
+                      <img
+                        key={friend.id}
+                        src={friend.avatar || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&q=80'}
+                        alt={friend.name}
+                        className="w-8 h-8 rounded-full border-2 border-dark object-cover"
+                      />
+                    ))}
+                  </div>
+                  <span className="text-sm text-lime">
+                    {friendsGoing.length} friend{friendsGoing.length > 1 ? 's' : ''} going
+                  </span>
+                </div>
+              </div>
+            )}
+
+            {/* Attendees Preview */}
+            {attendeesForModal.length > 0 ? (
+              <button
+                onClick={() => setShowAttendeesModal(true)}
+                className="w-full bg-surface border border-white/5 hover:border-lime/20 p-4 transition-colors flex items-center gap-4"
+              >
+                <div className="flex -space-x-3">
+                  {previewAttendees.map((attendee) => (
+                    <img
+                      key={attendee.id}
+                      src={attendee.avatar}
+                      alt={attendee.name}
+                      className="w-10 h-10 rounded-full object-cover border-2 border-surface"
+                    />
+                  ))}
+                  {totalCount > 4 && (
+                    <div className="w-10 h-10 rounded-full bg-dark border-2 border-surface flex items-center justify-center text-xs text-gray-400 font-semibold">
+                      +{totalCount - 4}
+                    </div>
+                  )}
+                </div>
+                <div className="flex-1 text-left">
+                  <div className="text-sm text-white">
+                    {previewAttendees.slice(0, 2).map(a => a.name).join(', ')}
+                    {totalCount > 2 && ` and ${totalCount - 2} others`}
+                  </div>
+                  <div className="text-xs text-gray-500">Click to view all attendees</div>
+                </div>
+                <Users className="w-5 h-5 text-gray-500" />
+              </button>
+            ) : (
+              <div className="bg-surface border border-white/5 p-6 text-center">
+                <Users className="w-8 h-8 text-gray-600 mx-auto mb-2" />
+                <p className="text-gray-500 text-sm">Be the first to get tickets!</p>
+              </div>
+            )}
+          </div>
+
+          {/* Attendees Modal */}
+          <MembersModal
+            isOpen={showAttendeesModal}
+            onClose={() => setShowAttendeesModal(false)}
+            title="Event Attendees"
+            members={attendeesForModal}
+            totalCount={totalCount}
+            onAddFriend={handleAddFriend}
+          />
+
+          {/* Event Updates / Message Board */}
+          <div className="mb-12">
+            <MessageBoard
+              title="Event Updates"
+              eventId={event.id}
+              maxMessages={3}
+              showComposeBox={true}
+            />
+          </div>
+        </div>
+
+        {/* Sticky Bottom Bar */}
+        <div className="fixed bottom-0 right-0 w-full lg:w-1/2 bg-surface border-t border-white/10 p-4 sm:p-6 flex items-center justify-between z-50">
+          <div>
+            <div className="text-xs text-gray-500 uppercase tracking-widest mb-1">
+              {ticketTiers.length > 1 ? 'Starting from' : 'Price'}
+            </div>
+            <div className="text-3xl font-display font-semibold text-white">
+              ${lowestPrice.toFixed(2)}
+            </div>
+          </div>
+          <button
+            onClick={handleBuyTickets}
+            className="bg-lime text-dark font-display font-semibold uppercase tracking-tight px-6 sm:px-10 py-3 sm:py-4 rounded-sm hover:bg-limehover transition-colors text-sm sm:text-base"
+          >
+            Buy Tickets
+          </button>
+        </div>
+      </div>
+
+      {/* Auth Prompt Modal */}
+      <AuthPromptModal
+        isOpen={showPrompt}
+        onClose={closePrompt}
+        reason={promptReason}
+      />
+
+      {/* Gallery Modal */}
+      {showGalleryModal && event.galleryImages && event.galleryImages.length > 0 && (
+        <div className="fixed inset-0 z-[100] bg-dark/95 flex items-center justify-center">
+          {/* Close button */}
+          <button
+            onClick={() => setShowGalleryModal(false)}
+            className="absolute top-6 right-6 z-10 w-12 h-12 bg-surface/50 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white hover:text-dark transition-colors border border-white/10"
+          >
+            <X className="w-6 h-6" />
+          </button>
+
+          {/* Previous button */}
+          {event.galleryImages.length > 1 && (
+            <button
+              onClick={() => setGalleryIndex(prev => prev === 0 ? event.galleryImages!.length - 1 : prev - 1)}
+              className="absolute left-4 md:left-8 z-10 w-12 h-12 bg-surface/50 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white hover:text-dark transition-colors border border-white/10"
+            >
+              <ChevronLeft className="w-6 h-6" />
+            </button>
+          )}
+
+          {/* Image */}
+          <div className="max-w-5xl max-h-[80vh] mx-4">
+            <img
+              src={event.galleryImages[galleryIndex]}
+              alt={`Event photo ${galleryIndex + 1}`}
+              className="max-w-full max-h-[80vh] object-contain rounded-sm"
+            />
+          </div>
+
+          {/* Next button */}
+          {event.galleryImages.length > 1 && (
+            <button
+              onClick={() => setGalleryIndex(prev => prev === event.galleryImages!.length - 1 ? 0 : prev + 1)}
+              className="absolute right-4 md:right-8 z-10 w-12 h-12 bg-surface/50 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white hover:text-dark transition-colors border border-white/10"
+            >
+              <ChevronRight className="w-6 h-6" />
+            </button>
+          )}
+
+          {/* Image counter */}
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 bg-surface/70 backdrop-blur-md px-4 py-2 rounded-full text-sm text-white border border-white/10">
+            {galleryIndex + 1} / {event.galleryImages.length}
+          </div>
+        </div>
+      )}
+    </div>
   );
 }

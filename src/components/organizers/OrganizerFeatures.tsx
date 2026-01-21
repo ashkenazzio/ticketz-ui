@@ -1,4 +1,4 @@
-import { BarChart3, ScanLine, UserCheck, Zap, Mail, Users } from 'lucide-react';
+import { BarChart3, Mail, Users } from 'lucide-react';
 
 const BASE = import.meta.env.BASE_URL;
 
@@ -59,52 +59,7 @@ export default function OrganizerFeatures() {
       </div>
 
 
-      {/* Block B: Entry (Visual Left / Text Right) */}
-      <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
-         {/* Visual B */}
-         <div className="order-2 md:order-1 relative">
-            <div className="relative rounded-lg overflow-hidden border border-white/5 shadow-2xl">
-                 <img 
-                    src={`${BASE}event-images/music-festival-2.jpg`} 
-                    alt="Door Entry" 
-                    className="w-full h-[400px] object-cover opacity-60 grayscale hover:grayscale-0 transition-all duration-700"
-                 />
-                 <div className="absolute inset-0 bg-gradient-to-t from-dark via-transparent to-transparent"></div>
-                 
-                 {/* Floating Scanner UI */}
-                 <div className="absolute bottom-8 left-8 right-8 bg-surface/90 backdrop-blur-md border border-white/10 p-4 rounded-xl shadow-lg flex items-center justify-between">
-                     <div className="flex items-center gap-4">
-                        <div className="bg-lime/20 p-3 rounded-full text-lime">
-                             <ScanLine className="w-6 h-6" />
-                        </div>
-                        <div>
-                             <p className="text-white font-bold text-lg">Check-in Success</p>
-                             <p className="text-gray-400 text-sm">Ticket #8X92 • Valid</p>
-                        </div>
-                     </div>
-                     <div className="w-10 h-10 bg-lime rounded-full flex items-center justify-center">
-                         <UserCheck className="w-6 h-6 text-dark" />
-                     </div>
-                 </div>
-            </div>
-         </div>
-
-         {/* Text B */}
-         <div className="order-1 md:order-2">
-            <div className="bg-lime/10 w-12 h-12 rounded-lg flex items-center justify-center text-lime mb-6 border border-lime/20">
-                <Zap className="w-6 h-6" />
-            </div>
-            <h2 className="font-serif text-3xl md:text-5xl text-white mb-6">
-                The smoothest door in town.
-            </h2>
-            <p className="text-gray-400 text-lg leading-relaxed mb-6">
-                No clunky hardware. No app downloads. Our browser-based scanner keeps the line moving so you can focus on welcoming your guests.
-            </p>
-         </div>
-      </div>
-
-
-      {/* Block C: CRM (Text Left / Visual Right) */}
+      {/* Block B: CRM (Text Left / Visual Right) */}
        <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
         <div>
           <div className="bg-lime/10 w-12 h-12 rounded-lg flex items-center justify-center text-lime mb-6 border border-lime/20">

@@ -1,54 +1,50 @@
+import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Users, Settings, ExternalLink, Crown, Shield } from 'lucide-react';
+import { useData } from '../../context/DataContext';
+import type { CommunityRole } from '../../data/types';
 
-interface CommunityMembership {
-  id: string;
-  name: string;
-  avatar: string;
-  coverImage: string;
-  memberCount: number;
-  role: 'member' | 'moderator' | 'admin';
-  eventCount: number;
-}
-
-// Mock data
-const myCommunities: CommunityMembership[] = [
-  {
-    id: '1',
-    name: 'Bass Sector',
-    avatar: 'https://images.unsplash.com/photo-1598387993441-a364f854c3e1?w=200&q=80',
-    coverImage: 'https://images.unsplash.com/photo-1493225255756-d9584f8606e9?w=800&q=80',
-    memberCount: 2500,
-    role: 'admin',
-    eventCount: 12,
-  },
-  {
-    id: '2',
-    name: 'Techno Bunker',
-    avatar: 'https://images.unsplash.com/photo-1571266028243-e4733b0f0bb0?w=200&q=80',
-    coverImage: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800&q=80',
-    memberCount: 1800,
-    role: 'member',
-    eventCount: 8,
-  },
-  {
-    id: '3',
-    name: 'House Heads',
-    avatar: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=200&q=80',
-    coverImage: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=800&q=80',
-    memberCount: 3200,
-    role: 'moderator',
-    eventCount: 15,
-  },
-];
-
-const roleConfig = {
+const roleConfig: Record<CommunityRole, { label: string; icon: typeof Crown; color: string }> = {
+  owner: { label: 'Owner', icon: Crown, color: 'text-lime bg-lime/10' },
   admin: { label: 'Admin', icon: Crown, color: 'text-lime bg-lime/10' },
   moderator: { label: 'Mod', icon: Shield, color: 'text-blue-400 bg-blue-400/10' },
   member: { label: 'Member', icon: Users, color: 'text-gray-400 bg-gray-400/10' },
 };
 
 export default function MyCommunities() {
+  const { db, currentUser } = useData();
+
+  // Get user's communities from database
+  const myCommunities = useMemo(() => {
+    if (!currentUser) return [];
+
+    const memberships = db.memberships.getByUser(currentUser.id);
+    return memberships.map(membership => {
+      const community = db.communities.getById(membership.communityId);
+      const memberCount = db.communities.getMemberCount(membership.communityId);
+      const eventCount = db.events.getByCommunity(membership.communityId).length;
+
+      return {
+        id: community?.id || '',
+        name: community?.name || 'Unknown Community',
+        avatar: community?.avatar || '',
+        coverImage: community?.coverImage || '',
+        memberCount,
+        role: membership.role,
+        eventCount,
+      };
+    }).filter(c => c.id);
+  }, [db, currentUser]);
+
+  if (!currentUser) {
+    return (
+      <div className="pt-20">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6">
+          <p className="text-gray-400">Please log in to view your communities.</p>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="pt-20">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6">
@@ -120,7 +116,7 @@ export default function MyCommunities() {
                         >
                           View
                         </Link>
-                        {(community.role === 'admin' || community.role === 'moderator') && (
+                        {(community.role === 'owner' || community.role === 'admin' || community.role === 'moderator') && (
                           <Link
                             to="/dashboard"
                             className="w-10 flex items-center justify-center bg-lime/10 text-lime hover:bg-lime hover:text-dark transition-colors"

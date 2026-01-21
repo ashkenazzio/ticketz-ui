@@ -1,4 +1,5 @@
 import { Disc } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const BASE = import.meta.env.BASE_URL;
 
@@ -48,9 +49,9 @@ export default function EditorialSpotlight() {
                     </div>
                 </div>
 
-                <button className="w-full md:w-auto bg-white text-dark font-bold px-8 py-4 rounded-lg uppercase tracking-wide hover:bg-lime transition-colors">
-                    Join the Listening Session
-                </button>
+                <Link to="/community/comm-003" className="inline-block w-full md:w-auto bg-white text-dark font-bold px-8 py-4 rounded-lg uppercase tracking-wide hover:bg-lime transition-colors text-center">
+                    View Community
+                </Link>
             </div>
         </div>
     </section>

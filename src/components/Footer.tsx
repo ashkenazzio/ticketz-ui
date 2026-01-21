@@ -51,7 +51,7 @@ export default function Footer() {
                         <li><Link to="/attendees" className="hover:text-lime transition-colors">For Attendees</Link></li>
                         <li><Link to="/organizers" className="hover:text-lime transition-colors">For Organizers</Link></li>
                         <li><Link to="/communities" className="hover:text-lime transition-colors">Communities</Link></li>
-                        <li><Link to="/discovery" className="hover:text-lime transition-colors">Discovery</Link></li>
+                        <li><Link to="/events" className="hover:text-lime transition-colors">Events</Link></li>
                     </ul>
                 </div>
                 

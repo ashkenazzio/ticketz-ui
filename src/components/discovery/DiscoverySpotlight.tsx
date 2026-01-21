@@ -34,7 +34,7 @@ export default function DiscoverySpotlight() {
                         <button className="bg-lime text-dark font-display font-semibold uppercase tracking-tight px-8 py-3 rounded-sm hover:bg-limehover transition-colors">
                             Subscribe
                         </button>
-                        <Link to="/community/1" className="border border-white/20 text-white font-display font-semibold uppercase tracking-tight px-8 py-3 rounded-sm hover:bg-white/10 transition-colors inline-block">
+                        <Link to="/community/comm-001" className="border border-white/20 text-white font-display font-semibold uppercase tracking-tight px-8 py-3 rounded-sm hover:bg-white/10 transition-colors inline-block">
                             View Profile
                         </Link>
                     </div>

@@ -34,7 +34,7 @@ export default function TrendingEvents() {
                 </blockquote>
 
                 <div className="pt-4">
-                    <Link to="/event/1" className="inline-flex items-center gap-3 bg-white text-dark font-bold px-8 py-4 rounded-sm hover:bg-lime hover:text-dark transition-all uppercase tracking-wide">
+                    <Link to="/event/evt-002" className="inline-flex items-center gap-3 bg-white text-dark font-bold px-8 py-4 rounded-sm hover:bg-lime hover:text-dark transition-all uppercase tracking-wide">
                         Join Sarah's Next Run <ArrowRight className="w-5 h-5" />
                     </Link>
                 </div>

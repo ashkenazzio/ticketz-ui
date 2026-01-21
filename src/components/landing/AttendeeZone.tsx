@@ -19,7 +19,7 @@ export default function AttendeeZone() {
         <div className="grid grid-cols-1 md:grid-cols-4 grid-rows-4 md:grid-rows-2 gap-4 h-auto md:h-[700px]">
           {/* Card 1: Workshops (Tall Left - 1x2) */}
           <Link
-            to="/discovery/workshops"
+            to="/app/search?tab=events&category=creative"
             className="group md:col-span-1 md:row-span-2 relative rounded-sm overflow-hidden border border-white/10 bg-surface min-h-[280px]"
           >
             <img
@@ -44,7 +44,7 @@ export default function AttendeeZone() {
 
           {/* Card 2: Nightlife (Big Center - 2x2) */}
           <Link
-            to="/discovery/nightlife"
+            to="/app/search?tab=events&category=music"
             className="group md:col-span-2 md:row-span-2 relative rounded-sm overflow-hidden border border-white/10 bg-surface min-h-[320px]"
           >
             <img
@@ -69,7 +69,7 @@ export default function AttendeeZone() {
 
           {/* Card 3: Fitness (Small Top Right - 1x1) */}
           <Link
-            to="/discovery/fitness"
+            to="/app/search?tab=events&category=fitness"
             className="group md:col-span-1 md:row-span-1 relative rounded-sm overflow-hidden border border-white/10 bg-surface min-h-[200px]"
           >
             <img
@@ -94,7 +94,7 @@ export default function AttendeeZone() {
 
           {/* Card 4: Tech (Small Bottom Right - 1x1) */}
           <Link
-            to="/discovery/tech"
+            to="/app/search?tab=events&category=tech"
             className="group md:col-span-1 md:row-span-1 relative rounded-sm overflow-hidden border border-white/10 bg-surface min-h-[200px]"
           >
             <img

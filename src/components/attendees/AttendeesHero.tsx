@@ -31,7 +31,7 @@ export default function AttendeesHero() {
 
           <div className="flex flex-wrap gap-4 pt-4 justify-center lg:justify-start">
             <Link
-              to="/discovery"
+              to="/events"
               className="bg-lime text-dark font-bold text-lg px-8 py-4 rounded-sm hover:bg-limehover transition-all transform hover:-translate-y-1 hover:shadow-lg hover:shadow-lime/20 flex items-center gap-3"
             >
               Explore Events <ArrowRight className="w-5 h-5" />

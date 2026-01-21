@@ -1,47 +1,77 @@
+import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Heart, Calendar, MapPin, ArrowRight, Bookmark } from 'lucide-react';
+import { useData } from '../../context/DataContext';
 
-interface SavedEvent {
-  id: string;
-  title: string;
-  date: string;
-  venue: string;
-  price: string;
-  image: string;
-  community: string;
+function formatEventDate(isoDate: string): string {
+  const date = new Date(isoDate);
+  const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const month = monthNames[date.getMonth()];
+  const day = date.getDate();
+  const year = date.getFullYear();
+  const hour = date.getHours();
+  const ampm = hour >= 12 ? 'PM' : 'AM';
+  const hour12 = hour % 12 || 12;
+  const minutes = date.getMinutes().toString().padStart(2, '0');
+  return `${month} ${day}, ${year} • ${hour12}:${minutes} ${ampm}`;
 }
 
-const savedEvents: SavedEvent[] = [
-  {
-    id: '1',
-    title: 'Electric Garden',
-    date: 'Nov 12, 2026 • 12:00 PM',
-    venue: 'Warehouse District, LA',
-    price: '$45',
-    image: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&q=80',
-    community: 'Bass Sector',
-  },
-  {
-    id: '2',
-    title: 'NYE Countdown 2027',
-    date: 'Dec 31, 2026 • 10:00 PM',
-    venue: 'Sky Lounge, Miami',
-    price: '$120',
-    image: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=600&q=80',
-    community: 'House Heads',
-  },
-  {
-    id: '3',
-    title: 'Techno Bunker Session',
-    date: 'Jan 15, 2027 • 11:00 PM',
-    venue: 'Club Void, Berlin',
-    price: '$35',
-    image: 'https://images.unsplash.com/photo-1571266028243-e4733b0f0bb0?w=600&q=80',
-    community: 'Techno Bunker',
-  },
-];
+function formatPrice(cents: number): string {
+  if (cents === 0) return 'Free';
+  return `$${(cents / 100).toFixed(0)}`;
+}
 
 export default function SavedEvents() {
+  const { db, currentUser, refresh } = useData();
+
+  const savedEvents = useMemo(() => {
+    if (!currentUser) return [];
+
+    const savedEventRecords = db.savedEvents.getByUser(currentUser.id);
+    return savedEventRecords.map(saved => {
+      const event = db.events.getById(saved.eventId);
+      if (!event) return null;
+
+      const community = db.communities.getById(event.communityId);
+      const tiers = db.ticketTiers.getByEvent(event.id);
+      const lowestPrice = tiers.length > 0 ? Math.min(...tiers.map(t => t.price)) : 0;
+
+      return {
+        id: event.id,
+        title: event.title,
+        date: formatEventDate(event.startTime),
+        venue: event.venueName,
+        price: formatPrice(lowestPrice),
+        image: event.coverImage || event.image,
+        community: community?.name || 'Unknown',
+      };
+    }).filter(Boolean) as {
+      id: string;
+      title: string;
+      date: string;
+      venue: string;
+      price: string;
+      image: string;
+      community: string;
+    }[];
+  }, [db, currentUser]);
+
+  const handleUnsave = (eventId: string) => {
+    if (!currentUser) return;
+    db.savedEvents.toggle(currentUser.id, eventId);
+    refresh();
+  };
+
+  if (!currentUser) {
+    return (
+      <div className="pt-20">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6">
+          <p className="text-gray-400">Please log in to view your saved events.</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="pt-20">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6">
@@ -65,6 +95,7 @@ export default function SavedEvents() {
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                     <button
+                      onClick={() => handleUnsave(event.id)}
                       className="absolute top-3 right-3 w-8 h-8 bg-dark/80 flex items-center justify-center text-lime hover:bg-lime hover:text-dark transition-colors"
                     >
                       <Heart className="w-4 h-4 fill-current" />
@@ -117,7 +148,7 @@ export default function SavedEvents() {
                 Tap the heart icon on events to save them here for later.
               </p>
               <Link
-                to="/discovery"
+                to="/events"
                 className="inline-block bg-lime text-dark px-6 py-3 font-semibold uppercase text-sm tracking-wide hover:bg-limehover transition-colors"
               >
                 Discover Events

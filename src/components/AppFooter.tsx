@@ -1,8 +1,15 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 export default function AppFooter() {
+  const location = useLocation();
+
+  // Pages with sticky purchase bar need extra padding for that bar
+  const hasPurchaseBar = location.pathname.startsWith('/event/');
+  // All other app pages have the mobile bottom nav
+  const hasMobileNav = !hasPurchaseBar;
+
   return (
-    <footer className="bg-dark border-t border-white/5 py-6 px-4 sm:px-6">
+    <footer className={`bg-dark border-t border-white/5 py-6 px-4 sm:px-6 ${hasPurchaseBar ? 'pb-24 md:pb-6' : ''} ${hasMobileNav ? 'pb-20 md:pb-6' : ''}`}>
       <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
         {/* Logo */}
         <Link to="/app" className="font-sans text-lg font-bold tracking-tight text-white">

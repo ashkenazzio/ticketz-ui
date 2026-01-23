@@ -1,13 +1,16 @@
+/**
+ * Static version of EventDetails for design system showcase.
+ * Uses hardcoded sample data instead of useParams().
+ */
 import { useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Calendar, MapPin, Clock, Share2, ArrowLeft, Users, Bookmark, CalendarRange, ChevronLeft, ChevronRight, X, Images } from 'lucide-react';
-import MessageBoard from '../../components/MessageBoard';
-import MembersModal from '../../components/MembersModal';
-import AuthPromptModal from '../../components/AuthPromptModal';
-import { useAuthPrompt } from '../../hooks/useAuthPrompt';
-import { type FriendStatus, type MemberRole } from '../../components/MemberCard';
-import { useEvent, useEventAttendees, useIsSaved, useData } from '../../context/DataContext';
-import { getCategoryById } from '../../constants/categories';
+import { Link } from 'react-router-dom';
+import { Calendar, MapPin, Clock, Share2, ArrowLeft, Users, Bookmark, CalendarRange, Images } from 'lucide-react';
+import MessageBoard from '../../../components/MessageBoard';
+import { useData } from '../../../context/DataContext';
+import { getCategoryById } from '../../../constants/categories';
+
+// Use first event from database
+const SAMPLE_EVENT_ID = 'evt-001';
 
 // Helper to format dates
 function formatDate(isoString: string): string {
@@ -20,86 +23,51 @@ function formatTime(isoString: string): string {
   return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
 }
 
-export default function EventDetails() {
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const [showAttendeesModal, setShowAttendeesModal] = useState(false);
-  const [showGalleryModal, setShowGalleryModal] = useState(false);
-  const [galleryIndex, setGalleryIndex] = useState(0);
-  const { showPrompt, promptReason, closePrompt, requireAuth } = useAuthPrompt();
+export default function StaticEventDetails() {
+  const [isSaved, setIsSaved] = useState(false);
   const { db, currentUser } = useData();
 
-  // Get event data from database
-  const eventData = useEvent(id);
-  const { attendees, friendsGoing, totalCount } = useEventAttendees(id);
-  const { isSaved, toggle: toggleSave } = useIsSaved(id);
+  // Get event data from database using hardcoded ID
+  const event = db.events.getById(SAMPLE_EVENT_ID);
+  const community = event ? db.communities.getById(event.communityId) : null;
+  const ticketTiers = event ? db.ticketTiers.getByEvent(event.id) : [];
+  const isMultiDay = event ? db.events.isMultiDay(event) : false;
 
-  // Handle missing event
-  if (!eventData) {
+  // Get attendees
+  const attendeeRecords = event ? db.attendees.getByEvent(event.id) : [];
+  const attendees = attendeeRecords.map(a => db.users.getById(a.userId)).filter((u): u is NonNullable<typeof u> => u !== null);
+  const totalCount = attendees.length;
+
+  // Check for friends going
+  const friendsGoing = currentUser
+    ? attendees.filter(attendee => {
+        const connection = db.connections.getStatus(currentUser.id, attendee.id);
+        return connection?.status === 'accepted';
+      })
+    : [];
+
+  if (!event) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h1 className="font-display text-3xl font-semibold uppercase tracking-tight mb-4">Event Not Found</h1>
-          <p className="text-gray-400 mb-6">The event you're looking for doesn't exist.</p>
-          <Link to="/app/search" className="text-lime hover:text-limehover">Browse Events</Link>
+          <p className="text-gray-400 mb-6">Sample event data not available.</p>
         </div>
       </div>
     );
   }
 
-  const { event, community, ticketTiers, isMultiDay } = eventData;
   const category = getCategoryById(event.category);
   const lowestPrice = ticketTiers.length > 0
     ? Math.min(...ticketTiers.map(t => t.price)) / 100
     : 0;
 
-  // Transform attendees to match MemberCard format
-  const attendeesForModal = attendees.map(user => {
-    const connection = currentUser ? db.connections.getStatus(currentUser.id, user.id) : undefined;
-    const mutualFriends = currentUser ? db.connections.getMutualFriends(currentUser.id, user.id).length : 0;
-    let friendStatus: FriendStatus = 'none';
-    if (connection) {
-      if (connection.status === 'accepted') friendStatus = 'friends';
-      else if (connection.status === 'pending') friendStatus = 'pending';
-    }
-    return {
-      id: user.id,
-      name: user.name,
-      avatar: user.avatar || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&q=80',
-      role: 'member' as MemberRole,
-      mutualFriends,
-      friendStatus,
-    };
-  });
-
-  const previewAttendees = attendeesForModal.slice(0, 4);
-
-  const handleAddFriend = (userId: string) => {
-    requireAuth(() => {
-      console.log('Add friend:', userId);
-    }, 'add_friend');
-  };
-
-  const handleBuyTickets = () => {
-    requireAuth(() => {
-      navigate(`/checkout?event=${id}`);
-    }, 'purchase');
-  };
-
-  const handleSaveEvent = () => {
-    requireAuth(() => {
-      toggleSave();
-    }, 'save_event');
-  };
-
-  const handleBack = () => {
-    navigate('/app/search');
-  };
+  const previewAttendees = attendees.slice(0, 4);
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen">
       {/* Left: Poster / Immersive Visual */}
-      <div className="lg:w-1/2 h-[50vh] lg:h-[calc(100vh-80px)] relative lg:fixed lg:left-0 lg:top-20 z-0">
+      <div className="lg:w-1/2 h-[50vh] lg:h-[calc(100vh-80px)] relative lg:sticky lg:top-20 z-0">
         <img
           src={event.coverImage || event.image || 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=2070&auto=format&fit=crop'}
           className="w-full h-full object-cover"
@@ -108,19 +76,15 @@ export default function EventDetails() {
         <div className="absolute inset-0 bg-gradient-to-t from-dark to-transparent opacity-90 lg:opacity-40"></div>
 
         <button
-          onClick={handleBack}
           className="absolute top-6 left-6 z-20 w-10 h-10 bg-dark/50 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white hover:text-dark transition-colors border border-white/10"
         >
           <ArrowLeft className="w-5 h-5" />
         </button>
       </div>
 
-      {/* Spacer for Desktop fixed left side */}
-      <div className="hidden lg:block lg:w-1/2"></div>
-
       {/* Right: Scrollable Details */}
       <div className="lg:w-1/2 relative z-10 bg-dark">
-        <div className="p-6 md:p-12 pb-0 md:pb-32">
+        <div className="p-6 md:p-12 pb-32">
 
           {/* Meta */}
           <div className="flex items-center gap-3 mb-6">
@@ -136,7 +100,7 @@ export default function EventDetails() {
             )}
             <div className="ml-auto flex items-center gap-2">
               <button
-                onClick={handleSaveEvent}
+                onClick={() => setIsSaved(!isSaved)}
                 className={`p-2 transition-colors ${
                   isSaved
                     ? 'text-lime bg-lime/10 border border-lime/20'
@@ -160,8 +124,7 @@ export default function EventDetails() {
 
           {/* Hosted By Community */}
           {community && (
-            <Link
-              to={`/community/${community.id}`}
+            <div
               className="flex items-center gap-4 mb-8 p-4 bg-surface border border-white/10 rounded-sm hover:border-lime/30 transition-colors group"
             >
               <div className="w-14 h-14 rounded-sm overflow-hidden border border-white/10">
@@ -180,7 +143,7 @@ export default function EventDetails() {
               <div className="text-gray-500 group-hover:text-lime transition-colors">
                 <ArrowLeft className="w-5 h-5 rotate-180" />
               </div>
-            </Link>
+            </div>
           )}
 
           {/* Key Info Grid - Start/End Time Display */}
@@ -277,10 +240,6 @@ export default function EventDetails() {
                 {event.galleryImages.slice(0, 6).map((img, idx) => (
                   <button
                     key={idx}
-                    onClick={() => {
-                      setGalleryIndex(idx);
-                      setShowGalleryModal(true);
-                    }}
                     className="group relative aspect-square overflow-hidden rounded-sm bg-surface focus:outline-none focus:ring-2 focus:ring-lime"
                   >
                     <img src={img} alt={`Event photo ${idx + 1}`} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-300" />
@@ -298,7 +257,6 @@ export default function EventDetails() {
                 Who's Going
               </h3>
               <button
-                onClick={() => setShowAttendeesModal(true)}
                 className="text-sm text-lime hover:text-limehover transition-colors"
               >
                 View All
@@ -327,16 +285,15 @@ export default function EventDetails() {
             )}
 
             {/* Attendees Preview */}
-            {attendeesForModal.length > 0 ? (
+            {attendees.length > 0 ? (
               <button
-                onClick={() => setShowAttendeesModal(true)}
                 className="w-full bg-surface border border-white/5 hover:border-lime/20 p-4 transition-colors flex items-center gap-4"
               >
                 <div className="flex -space-x-3">
                   {previewAttendees.map((attendee) => (
                     <img
                       key={attendee.id}
-                      src={attendee.avatar}
+                      src={attendee.avatar || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&q=80'}
                       alt={attendee.name}
                       className="w-10 h-10 rounded-full object-cover border-2 border-surface"
                     />
@@ -364,18 +321,8 @@ export default function EventDetails() {
             )}
           </div>
 
-          {/* Attendees Modal */}
-          <MembersModal
-            isOpen={showAttendeesModal}
-            onClose={() => setShowAttendeesModal(false)}
-            title="Event Attendees"
-            members={attendeesForModal}
-            totalCount={totalCount}
-            onAddFriend={handleAddFriend}
-          />
-
           {/* Event Updates / Message Board */}
-          <div>
+          <div className="mb-12">
             <MessageBoard
               title="Event Updates"
               eventId={event.id}
@@ -386,7 +333,7 @@ export default function EventDetails() {
         </div>
 
         {/* Sticky Bottom Bar */}
-        <div className="fixed bottom-0 right-0 w-full lg:w-1/2 bg-surface border-t border-white/10 p-4 sm:p-6 flex items-center justify-between z-50">
+        <div className="sticky bottom-0 w-full bg-surface border-t border-white/10 p-4 sm:p-6 flex items-center justify-between z-50">
           <div>
             <div className="text-xs text-gray-500 uppercase tracking-widest mb-1">
               {ticketTiers.length > 1 ? 'Starting from' : 'Price'}
@@ -396,67 +343,12 @@ export default function EventDetails() {
             </div>
           </div>
           <button
-            onClick={handleBuyTickets}
             className="bg-lime text-dark font-display font-semibold uppercase tracking-tight px-6 sm:px-10 py-3 sm:py-4 rounded-sm hover:bg-limehover transition-colors text-sm sm:text-base"
           >
             Buy Tickets
           </button>
         </div>
       </div>
-
-      {/* Auth Prompt Modal */}
-      <AuthPromptModal
-        isOpen={showPrompt}
-        onClose={closePrompt}
-        reason={promptReason}
-      />
-
-      {/* Gallery Modal */}
-      {showGalleryModal && event.galleryImages && event.galleryImages.length > 0 && (
-        <div className="fixed inset-0 z-[100] bg-dark/95 flex items-center justify-center">
-          {/* Close button */}
-          <button
-            onClick={() => setShowGalleryModal(false)}
-            className="absolute top-6 right-6 z-10 w-12 h-12 bg-surface/50 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white hover:text-dark transition-colors border border-white/10"
-          >
-            <X className="w-6 h-6" />
-          </button>
-
-          {/* Previous button */}
-          {event.galleryImages.length > 1 && (
-            <button
-              onClick={() => setGalleryIndex(prev => prev === 0 ? event.galleryImages!.length - 1 : prev - 1)}
-              className="absolute left-4 md:left-8 z-10 w-12 h-12 bg-surface/50 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white hover:text-dark transition-colors border border-white/10"
-            >
-              <ChevronLeft className="w-6 h-6" />
-            </button>
-          )}
-
-          {/* Image */}
-          <div className="max-w-5xl max-h-[80vh] mx-4">
-            <img
-              src={event.galleryImages[galleryIndex]}
-              alt={`Event photo ${galleryIndex + 1}`}
-              className="max-w-full max-h-[80vh] object-contain rounded-sm"
-            />
-          </div>
-
-          {/* Next button */}
-          {event.galleryImages.length > 1 && (
-            <button
-              onClick={() => setGalleryIndex(prev => prev === event.galleryImages!.length - 1 ? 0 : prev + 1)}
-              className="absolute right-4 md:right-8 z-10 w-12 h-12 bg-surface/50 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white hover:text-dark transition-colors border border-white/10"
-            >
-              <ChevronRight className="w-6 h-6" />
-            </button>
-          )}
-
-          {/* Image counter */}
-          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 bg-surface/70 backdrop-blur-md px-4 py-2 rounded-full text-sm text-white border border-white/10">
-            {galleryIndex + 1} / {event.galleryImages.length}
-          </div>
-        </div>
-      )}
     </div>
   );
 }

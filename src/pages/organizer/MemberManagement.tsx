@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Search, Users, MoreVertical, Shield, Crown, UserMinus, Mail, Calendar, Ticket, Download } from 'lucide-react';
 import { exportToCSV } from '../../utils/csv';
+import Dropdown, { DropdownItem } from '../../components/Dropdown';
 
 type MemberRole = 'admin' | 'moderator' | 'member';
 
@@ -152,13 +153,13 @@ export default function MemberManagement() {
             className="w-full bg-surface border border-white/10 pl-12 pr-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-lime transition-colors"
           />
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 overflow-x-auto pb-2 -mb-2 scrollbar-hide">
           {(['all', 'admin', 'moderator', 'member'] as const).map((role) => (
             <button
               key={role}
               onClick={() => setRoleFilter(role)}
               className={`
-                px-4 py-3 text-xs font-semibold uppercase tracking-wide transition-all
+                px-4 py-3 text-xs font-semibold uppercase tracking-wide transition-all whitespace-nowrap flex-shrink-0
                 ${roleFilter === role
                   ? 'bg-lime text-dark'
                   : 'bg-surface text-gray-400 hover:text-white'
@@ -236,35 +237,36 @@ export default function MemberManagement() {
 
                 {/* Actions */}
                 <div className="col-span-2 flex items-center justify-end gap-2">
-                  <div className="relative group/menu">
-                    <button className="p-2 text-gray-400 hover:text-white transition-colors">
-                      <MoreVertical className="w-4 h-4" />
-                    </button>
-                    {/* Dropdown Menu */}
-                    <div className="absolute right-0 top-full mt-1 w-44 bg-surface border border-white/10 opacity-0 invisible group-hover/menu:opacity-100 group-hover/menu:visible transition-all z-10">
-                      {member.role === 'member' && (
-                        <button className="w-full flex items-center gap-2 px-4 py-2 text-sm text-gray-300 hover:bg-dark hover:text-white transition-colors">
-                          <Shield className="w-3.5 h-3.5" /> Make Moderator
-                        </button>
-                      )}
-                      {member.role === 'moderator' && (
-                        <>
-                          <button className="w-full flex items-center gap-2 px-4 py-2 text-sm text-gray-300 hover:bg-dark hover:text-white transition-colors">
-                            <Crown className="w-3.5 h-3.5" /> Make Admin
-                          </button>
-                          <button className="w-full flex items-center gap-2 px-4 py-2 text-sm text-gray-300 hover:bg-dark hover:text-white transition-colors">
-                            <Users className="w-3.5 h-3.5" /> Remove Mod
-                          </button>
-                        </>
-                      )}
-                      <button className="w-full flex items-center gap-2 px-4 py-2 text-sm text-gray-300 hover:bg-dark hover:text-white transition-colors">
-                        <Mail className="w-3.5 h-3.5" /> Send Message
+                  <Dropdown
+                    trigger={
+                      <button className="p-2 text-gray-400 hover:text-white transition-colors">
+                        <MoreVertical className="w-4 h-4" />
                       </button>
-                      <button className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-400 hover:bg-dark hover:text-red-300 transition-colors">
-                        <UserMinus className="w-3.5 h-3.5" /> Remove Member
-                      </button>
-                    </div>
-                  </div>
+                    }
+                    width="w-44"
+                  >
+                    {member.role === 'member' && (
+                      <DropdownItem icon={<Shield className="w-3.5 h-3.5" />}>
+                        Make Moderator
+                      </DropdownItem>
+                    )}
+                    {member.role === 'moderator' && (
+                      <>
+                        <DropdownItem icon={<Crown className="w-3.5 h-3.5" />}>
+                          Make Admin
+                        </DropdownItem>
+                        <DropdownItem icon={<Users className="w-3.5 h-3.5" />}>
+                          Remove Mod
+                        </DropdownItem>
+                      </>
+                    )}
+                    <DropdownItem icon={<Mail className="w-3.5 h-3.5" />}>
+                      Send Message
+                    </DropdownItem>
+                    <DropdownItem variant="danger" icon={<UserMinus className="w-3.5 h-3.5" />}>
+                      Remove Member
+                    </DropdownItem>
+                  </Dropdown>
                 </div>
               </div>
             );

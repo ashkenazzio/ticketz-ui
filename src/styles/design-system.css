@@ -1,0 +1,121 @@
+/* Design System - Forced State Utilities */
+/* These classes force interactive states to display permanently for showcase purposes */
+
+/* ============================================
+   FORCE HOVER STATE
+   ============================================ */
+.force-hover,
+.force-hover * {
+  transition: none !important;
+}
+
+/* Border colors */
+.force-hover .hover\:border-lime\/30 { border-color: rgb(167 241 117 / 0.3) !important; }
+.force-hover .hover\:border-lime\/20 { border-color: rgb(167 241 117 / 0.2) !important; }
+.force-hover .hover\:border-lime { border-color: #a7f175 !important; }
+.force-hover .hover\:border-white\/40 { border-color: rgb(255 255 255 / 0.4) !important; }
+.force-hover .hover\:border-white\/20 { border-color: rgb(255 255 255 / 0.2) !important; }
+
+/* Background colors */
+.force-hover .hover\:bg-lime\/10 { background-color: rgb(167 241 117 / 0.1) !important; }
+.force-hover .hover\:bg-lime\/5 { background-color: rgb(167 241 117 / 0.05) !important; }
+.force-hover .hover\:bg-lime { background-color: #a7f175 !important; }
+.force-hover .hover\:bg-limehover { background-color: #96d969 !important; }
+.force-hover .hover\:bg-white\/5 { background-color: rgb(255 255 255 / 0.05) !important; }
+.force-hover .hover\:bg-white\/10 { background-color: rgb(255 255 255 / 0.1) !important; }
+.force-hover .hover\:bg-surface { background-color: #18191b !important; }
+.force-hover .hover\:bg-dark { background-color: #0d1216 !important; }
+
+/* Text colors */
+.force-hover .hover\:text-lime { color: #a7f175 !important; }
+.force-hover .hover\:text-white { color: white !important; }
+.force-hover .hover\:text-gray-300 { color: rgb(209 213 219) !important; }
+
+/* Transforms */
+.force-hover .hover\:scale-105 { transform: scale(1.05) !important; }
+.force-hover .hover\:scale-110 { transform: scale(1.1) !important; }
+.force-hover .hover\:-translate-y-1 { transform: translateY(-0.25rem) !important; }
+.force-hover .hover\:-translate-y-2 { transform: translateY(-0.5rem) !important; }
+
+/* Shadows */
+.force-hover .hover\:shadow-glow-lime { box-shadow: 0 0 30px rgba(167, 241, 117, 0.1) !important; }
+.force-hover .hover\:shadow-lg { box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1) !important; }
+.force-hover .hover\:shadow-xl { box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1) !important; }
+
+/* Opacity */
+.force-hover .hover\:opacity-100 { opacity: 1 !important; }
+.force-hover .hover\:opacity-80 { opacity: 0.8 !important; }
+
+/* Group hover - parent has .group class */
+.force-hover .group-hover\:opacity-100 { opacity: 1 !important; }
+.force-hover .group-hover\:text-lime { color: #a7f175 !important; }
+.force-hover .group-hover\:text-white { color: white !important; }
+.force-hover .group-hover\:scale-105 { transform: scale(1.05) !important; }
+.force-hover .group-hover\:scale-110 { transform: scale(1.1) !important; }
+.force-hover .group-hover\:bg-lime\/10 { background-color: rgb(167 241 117 / 0.1) !important; }
+.force-hover .group-hover\:border-lime\/30 { border-color: rgb(167 241 117 / 0.3) !important; }
+.force-hover .group-hover\:translate-x-1 { transform: translateX(0.25rem) !important; }
+
+/* Underline */
+.force-hover .hover\:underline { text-decoration: underline !important; }
+
+/* ============================================
+   FORCE FOCUS STATE
+   ============================================ */
+.force-focus,
+.force-focus * {
+  transition: none !important;
+}
+
+.force-focus input,
+.force-focus textarea,
+.force-focus select {
+  border-color: #a7f175 !important;
+  outline: none !important;
+  box-shadow: 0 0 0 2px rgba(167, 241, 117, 0.2) !important;
+}
+
+.force-focus .focus\:border-lime { border-color: #a7f175 !important; }
+.force-focus .focus\:ring-lime { box-shadow: 0 0 0 2px rgba(167, 241, 117, 0.3) !important; }
+.force-focus .focus\:outline-none { outline: none !important; }
+
+/* ============================================
+   FORCE ACTIVE STATE
+   ============================================ */
+.force-active,
+.force-active * {
+  transition: none !important;
+}
+
+.force-active .active\:scale-95 { transform: scale(0.95) !important; }
+.force-active .active\:bg-limehover { background-color: #96d969 !important; }
+.force-active .active\:bg-lime\/20 { background-color: rgb(167 241 117 / 0.2) !important; }
+
+/* ============================================
+   FORCE DISABLED STATE
+   ============================================ */
+.force-disabled {
+  opacity: 0.5 !important;
+  pointer-events: none !important;
+  cursor: not-allowed !important;
+}
+
+/* ============================================
+   DESIGN SYSTEM PAGE UTILITIES
+   ============================================ */
+.ds-page {
+  min-height: 100vh;
+  background-color: #0d1216;
+  color: white;
+}
+
+.ds-container {
+  width: 100%;
+  padding: 2rem;
+}
+
+@media (min-width: 1024px) {
+  .ds-container {
+    padding: 4rem;
+  }
+}

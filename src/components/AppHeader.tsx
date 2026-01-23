@@ -6,6 +6,7 @@ import NotificationsDropdown from './NotificationsDropdown';
 
 interface AppHeaderProps {
   title?: string;
+  hideMobileNav?: boolean;
 }
 
 const navItems = [
@@ -15,11 +16,14 @@ const navItems = [
   { path: '/my-communities', label: 'Communities', icon: Users },
 ];
 
-export default function AppHeader({ title }: AppHeaderProps) {
+export default function AppHeader({ title, hideMobileNav }: AppHeaderProps) {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, isAuthenticated, logout } = useAuth();
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+
+  // Hide mobile nav on pages with their own bottom bar (event details)
+  const shouldHideMobileNav = hideMobileNav || location.pathname.startsWith('/event/');
 
   const handleLogout = () => {
     logout();
@@ -190,6 +194,7 @@ export default function AppHeader({ title }: AppHeaderProps) {
       </header>
 
       {/* Mobile Bottom Nav */}
+      {!shouldHideMobileNav && (
       <div className="md:hidden fixed bottom-0 left-0 right-0 bg-surface border-t border-white/5 px-4 py-2 z-50">
         <div className="flex items-center justify-around">
           {navItems.map((item) => (
@@ -233,6 +238,7 @@ export default function AppHeader({ title }: AppHeaderProps) {
           )}
         </div>
       </div>
+      )}
     </>
   );
 }

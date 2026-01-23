@@ -61,6 +61,14 @@ import AppSplash from './pages/AppSplash';
 // Error Pages
 import NotFound from './pages/NotFound';
 
+// Design System Pages
+import DesignSystemIndex from './pages/design-system/index';
+import AtomsPage from './pages/design-system/AtomsPage';
+import MoleculesPage from './pages/design-system/MoleculesPage';
+import OrganismsPage from './pages/design-system/OrganismsPage';
+import MarketingSectionsPage from './pages/design-system/MarketingSectionsPage';
+import FullPagesShowcase from './pages/design-system/FullPagesShowcase';
+
 function App() {
   return (
     <AuthProvider>
@@ -122,6 +130,14 @@ function App() {
             <Route path="community/settings" element={<CommunitySettings />} />
             <Route path="community/new" element={<CreateCommunity />} />
           </Route>
+
+          {/* Design System Routes (no layout - standalone) */}
+          <Route path="/design-system" element={<DesignSystemIndex />} />
+          <Route path="/design-system/atoms" element={<AtomsPage />} />
+          <Route path="/design-system/molecules" element={<MoleculesPage />} />
+          <Route path="/design-system/organisms" element={<OrganismsPage />} />
+          <Route path="/design-system/marketing" element={<MarketingSectionsPage />} />
+          <Route path="/design-system/pages" element={<FullPagesShowcase />} />
 
           {/* 404 Catch-all */}
           <Route path="*" element={<NotFound />} />

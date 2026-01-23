@@ -5,7 +5,6 @@ import TypeSafetySection from '../components/about/TypeSafetySection';
 import DataModel from '../components/about/DataModel';
 import Infrastructure from '../components/about/Infrastructure';
 import NoAIBadge from '../components/about/NoAIBadge';
-import MobileBottomNav from '../components/MobileBottomNav';
 
 export default function About() {
   return (
@@ -17,7 +16,6 @@ export default function About() {
       <DataModel />
       <Infrastructure />
       <NoAIBadge />
-      <MobileBottomNav />
     </>
   );
 }

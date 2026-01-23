@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { Plus, Search, Calendar, Users, MoreVertical, Edit, Copy, Trash2, BarChart3 } from 'lucide-react';
 import type { BadgeStatus } from '../../components/StatusBadge';
 import StatusBadge from '../../components/StatusBadge';
+import Dropdown, { DropdownItem } from '../../components/Dropdown';
 import { useData, useMyManagedCommunities } from '../../context/DataContext';
 
 // Helper to format date
@@ -115,97 +116,117 @@ export default function EventManagement() {
             {events.map((event) => (
               <div
                 key={event.id}
-                className="grid grid-cols-1 md:grid-cols-12 gap-4 px-6 py-4 hover:bg-dark/30 transition-colors group"
+                className="relative px-6 py-4 hover:bg-dark/30 transition-colors group"
               >
-                {/* Event Info */}
-                <div className="col-span-5 flex items-center gap-4">
-                  <img
-                    src={event.image}
-                    alt={event.title}
-                    className="w-16 h-16 object-cover flex-shrink-0"
-                  />
-                  <div className="min-w-0">
-                    <Link
-                      to={`/dashboard/events/${event.id}/edit`}
-                      className="font-display text-sm font-semibold uppercase tracking-tight hover:text-lime transition-colors block truncate"
-                    >
-                      {event.title}
-                    </Link>
-                    <div className="flex items-center gap-2 text-xs text-gray-400 mt-1">
-                      <Calendar className="w-3 h-3" />
-                      <span className="truncate">{event.date}</span>
-                    </div>
-                    <div className="text-xs text-gray-500 truncate">{event.venue}</div>
-                  </div>
+                {/* Mobile: Actions button in top-right corner */}
+                <div className="absolute right-4 top-4 md:hidden">
+                  <Dropdown
+                    trigger={
+                      <button className="p-2 text-gray-400 hover:text-white transition-colors">
+                        <MoreVertical className="w-4 h-4" />
+                      </button>
+                    }
+                  >
+                    <DropdownItem href={`/event/${event.id}`} icon={<Calendar className="w-3.5 h-3.5" />}>
+                      View Event
+                    </DropdownItem>
+                    <DropdownItem href={`/dashboard/events/${event.id}/edit`} icon={<Edit className="w-3.5 h-3.5" />}>
+                      Edit
+                    </DropdownItem>
+                    <DropdownItem href={`/dashboard/events/${event.id}/guests`} icon={<Users className="w-3.5 h-3.5" />}>
+                      Guest List
+                    </DropdownItem>
+                    <DropdownItem href={`/dashboard/events/${event.id}/analytics`} icon={<BarChart3 className="w-3.5 h-3.5" />}>
+                      Analytics
+                    </DropdownItem>
+                    <DropdownItem icon={<Copy className="w-3.5 h-3.5" />}>
+                      Duplicate
+                    </DropdownItem>
+                    <DropdownItem variant="danger" icon={<Trash2 className="w-3.5 h-3.5" />}>
+                      Delete
+                    </DropdownItem>
+                  </Dropdown>
                 </div>
 
-                {/* Status */}
-                <div className="col-span-2 flex items-center">
-                  <StatusBadge status={event.status} size="sm" />
-                </div>
-
-                {/* Tickets */}
-                <div className="col-span-2 flex items-center">
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <Users className="w-3.5 h-3.5 text-gray-500" />
-                      <span className="text-sm font-semibold">{event.ticketsSold}</span>
-                      <span className="text-xs text-gray-500">/ {event.ticketsCap}</span>
-                    </div>
-                    {/* Progress bar */}
-                    <div className="w-20 h-1 bg-dark mt-1.5">
-                      <div
-                        className="h-full bg-lime"
-                        style={{ width: `${event.ticketsCap > 0 ? (event.ticketsSold / event.ticketsCap) * 100 : 0}%` }}
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Revenue */}
-                <div className="col-span-2 flex items-center">
-                  <span className="text-sm font-semibold text-lime">{event.revenue}</span>
-                </div>
-
-                {/* Actions */}
-                <div className="col-span-1 flex items-center justify-end">
-                  <div className="relative group/menu">
-                    <button className="p-2 text-gray-400 hover:text-white transition-colors">
-                      <MoreVertical className="w-4 h-4" />
-                    </button>
-                    {/* Dropdown Menu */}
-                    <div className="absolute right-0 top-full mt-1 w-40 bg-surface border border-white/10 opacity-0 invisible group-hover/menu:opacity-100 group-hover/menu:visible transition-all z-10">
-                      <Link
-                        to={`/event/${event.id}`}
-                        className="flex items-center gap-2 px-4 py-2 text-sm text-gray-300 hover:bg-dark hover:text-white transition-colors"
-                      >
-                        <Calendar className="w-3.5 h-3.5" /> View Event
-                      </Link>
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+                  {/* Event Info */}
+                  <div className="col-span-5 flex items-center gap-4">
+                    <img
+                      src={event.image}
+                      alt={event.title}
+                      className="w-16 h-16 object-cover flex-shrink-0"
+                    />
+                    <div className="min-w-0">
                       <Link
                         to={`/dashboard/events/${event.id}/edit`}
-                        className="flex items-center gap-2 px-4 py-2 text-sm text-gray-300 hover:bg-dark hover:text-white transition-colors"
+                        className="font-display text-sm font-semibold uppercase tracking-tight hover:text-lime transition-colors block truncate"
                       >
-                        <Edit className="w-3.5 h-3.5" /> Edit
+                        {event.title}
                       </Link>
-                      <Link
-                        to={`/dashboard/events/${event.id}/guests`}
-                        className="flex items-center gap-2 px-4 py-2 text-sm text-gray-300 hover:bg-dark hover:text-white transition-colors"
-                      >
-                        <Users className="w-3.5 h-3.5" /> Guest List
-                      </Link>
-                      <Link
-                        to={`/dashboard/events/${event.id}/analytics`}
-                        className="flex items-center gap-2 px-4 py-2 text-sm text-gray-300 hover:bg-dark hover:text-white transition-colors"
-                      >
-                        <BarChart3 className="w-3.5 h-3.5" /> Analytics
-                      </Link>
-                      <button className="w-full flex items-center gap-2 px-4 py-2 text-sm text-gray-300 hover:bg-dark hover:text-white transition-colors">
-                        <Copy className="w-3.5 h-3.5" /> Duplicate
-                      </button>
-                      <button className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-400 hover:bg-dark hover:text-red-300 transition-colors">
-                        <Trash2 className="w-3.5 h-3.5" /> Delete
-                      </button>
+                      <div className="flex items-center gap-2 text-xs text-gray-400 mt-1">
+                        <Calendar className="w-3 h-3" />
+                        <span className="truncate">{event.date}</span>
+                      </div>
+                      <div className="text-xs text-gray-500 truncate">{event.venue}</div>
                     </div>
+                  </div>
+
+                  {/* Status */}
+                  <div className="col-span-2 flex items-center">
+                    <StatusBadge status={event.status} size="sm" />
+                  </div>
+
+                  {/* Tickets */}
+                  <div className="col-span-2 flex items-center">
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <Users className="w-3.5 h-3.5 text-gray-500" />
+                        <span className="text-sm font-semibold">{event.ticketsSold}</span>
+                        <span className="text-xs text-gray-500">/ {event.ticketsCap}</span>
+                      </div>
+                      {/* Progress bar */}
+                      <div className="w-20 h-1 bg-dark mt-1.5">
+                        <div
+                          className="h-full bg-lime"
+                          style={{ width: `${event.ticketsCap > 0 ? (event.ticketsSold / event.ticketsCap) * 100 : 0}%` }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Revenue */}
+                  <div className="col-span-2 flex items-center">
+                    <span className="text-sm font-semibold text-lime">{event.revenue}</span>
+                  </div>
+
+                  {/* Desktop: Actions */}
+                  <div className="col-span-1 hidden md:flex items-center justify-end">
+                    <Dropdown
+                      trigger={
+                        <button className="p-2 text-gray-400 hover:text-white transition-colors">
+                          <MoreVertical className="w-4 h-4" />
+                        </button>
+                      }
+                    >
+                      <DropdownItem href={`/event/${event.id}`} icon={<Calendar className="w-3.5 h-3.5" />}>
+                        View Event
+                      </DropdownItem>
+                      <DropdownItem href={`/dashboard/events/${event.id}/edit`} icon={<Edit className="w-3.5 h-3.5" />}>
+                        Edit
+                      </DropdownItem>
+                      <DropdownItem href={`/dashboard/events/${event.id}/guests`} icon={<Users className="w-3.5 h-3.5" />}>
+                        Guest List
+                      </DropdownItem>
+                      <DropdownItem href={`/dashboard/events/${event.id}/analytics`} icon={<BarChart3 className="w-3.5 h-3.5" />}>
+                        Analytics
+                      </DropdownItem>
+                      <DropdownItem icon={<Copy className="w-3.5 h-3.5" />}>
+                        Duplicate
+                      </DropdownItem>
+                      <DropdownItem variant="danger" icon={<Trash2 className="w-3.5 h-3.5" />}>
+                        Delete
+                      </DropdownItem>
+                    </Dropdown>
                   </div>
                 </div>
               </div>
